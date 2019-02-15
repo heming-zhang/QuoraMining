@@ -14,7 +14,8 @@ cursor.execute("DROP TABLE IF EXISTS MOVIES")
 # Create table as per requirement
 sql = """CREATE TABLE MOVIES (
    Title  CHAR(20) NOT NULL,
-   Text CHAR(20) )"""
+   Text CHAR(20), 
+   Datetime DATE)"""
 
 cursor.execute(sql)
 
