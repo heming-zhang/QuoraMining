@@ -11,35 +11,51 @@ from selenium.webdriver.support import ui
 from selenium.webdriver.common.keys import Keys
 
 def page_is_loaded(driver):
-        return driver.find_element_by_tag_name("body") != None
+    return driver.find_element_by_tag_name("body") != None
 
 def donwload_page(link):
     crawl = urllib.request.urlopen(link)
     # print(crawl.read())
     return crawl.read()
 
+
+
 def quora_login():
+    # TODO: use webdriver to login into quora
     driver = webdriver.Chrome(ChromeDriverManager().install()) 
-    driver.get("https://www.quora.com/")
-    wait = ui.WebDriverWait(driver, 10)
+    driver.get("https://www.quora.com/?prevent_redirect=1") #  to use English as the first language
     # wait for 10 seconds before showing exception
+    wait = ui.WebDriverWait(driver, 10)
     wait.until(page_is_loaded)
-    email_field = driver.find_element_by_css_selector("input[placeholder=Email]") # メールアドレス
-    email_field.send_keys("453315984@qq.com")
-    password_field = driver.find_element_by_css_selector("input[placeholder=Password]") # パスワード
-    password_field.send_keys("ccnu15zhm4533")
-    # password_field.send_keys(Keys.RETURN)
-    
+    email_field = driver.find_element_by_xpath("//input[@placeholder='Email']") # メールアドレス
+    email_field.send_keys("3181276187@qq.com")
+    password_field = driver.find_element_by_xpath("//input[@placeholder='Password']") # パスワード
+    password_field.send_keys("15hszhm961203")
+    # click submit button to enter into quora
     driver.find_element_by_xpath("//input[@class='submit_button ignore_interaction']").click()
-
-    driver.save_screenshot("quora_home0.png")
+    # password_field.send_keys(Keys.RETURN)
+    wait = ui.WebDriverWait(driver, 10)
+    wait.until(page_is_loaded)
     print (driver.current_url)
+    driver.save_screenshot("quora_home0.png")
+    soup = BeautifulSoup(driver.page_source,'lxml')
+    print(soup.find('title').string)
+    return driver
 
+
+def quora_crawl():
+    # crawl Q&A from topic of movies
+    driver = quora_login()
+    wait = ui.WebDriverWait(driver, 10)
+    wait.until(page_is_loaded)
+    driver.get("https://www.quora.com/topic/Movies")
+    print (driver.current_url)
+    driver.save_screenshot("quora_movies0.png")
     soup = BeautifulSoup(driver.page_source,'lxml')
     print(soup.find('title').string)
 
+
 if __name__ == "__main__":
-    quora_login()
+    quora_crawl()
 
 
-# <input class="submit_button ignore_interaction" type="submit" value="Login" tabindex="4" data-group="js-editable" w2cid="wQZ1KLty18" id="__w2_wQZ1KLty18_submit_button">
