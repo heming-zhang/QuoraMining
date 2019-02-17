@@ -23,7 +23,7 @@ class Login():
     def login(self):
         # TODO: use webdriver to open login into Quora
         driver = webdriver.Chrome(ChromeDriverManager().install()) 
-        driver.get(self.homeurl) #  to use English as the first language
+        driver.get(self.homeurl)
         WaitPage("None", driver).wait_common_page()
         email_field = driver.find_element_by_xpath("//input[@placeholder='Email']") # メールアドレス
         email_field.send_keys(self.email)
