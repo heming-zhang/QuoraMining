@@ -8,16 +8,18 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import ui
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+
 
 def page_is_loaded(driver):
     return driver.find_element_by_tag_name("body") != None
+
 
 def donwload_page(link):
     crawl = urllib.request.urlopen(link)
     # print(crawl.read())
     return crawl.read()
-
 
 
 def quora_login():
@@ -35,7 +37,7 @@ def quora_login():
     driver.find_element_by_xpath("//input[@class='submit_button ignore_interaction']").click()
     # password_field.send_keys(Keys.RETURN)
     wait = ui.WebDriverWait(driver, 10)
-    wait.until(page_is_loaded)
+    wait.until(EC.title_contains('Home - Quora'))
     print (driver.current_url)
     driver.save_screenshot("quora_home0.png")
     soup = BeautifulSoup(driver.page_source,'lxml')
@@ -46,9 +48,9 @@ def quora_login():
 def quora_crawl():
     # crawl Q&A from topic of movies
     driver = quora_login()
-    wait = ui.WebDriverWait(driver, 10)
-    wait.until(page_is_loaded)
     driver.get("https://www.quora.com/topic/Movies")
+    wait = ui.WebDriverWait(driver, 10)
+    wait.until(EC.title_contains('Movies - Quora'))
     print (driver.current_url)
     driver.save_screenshot("quora_movies0.png")
     soup = BeautifulSoup(driver.page_source,'lxml')
