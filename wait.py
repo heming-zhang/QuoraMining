@@ -22,15 +22,17 @@ class WaitPage():
 
 
     def wait_common_page(self):
+        # cannot predict next webpage
         driver = self.driver
         wait = ui.WebDriverWait(driver, 10)
         wait.until(page_is_loaded)
 
+
     def wait_page(self):
+        # able to predcit next webpage
         driver = self.driver
         wait = ui.WebDriverWait(driver, 10)
         wait.until(EC.title_contains(self.titlename))
-
 
 
 

@@ -15,10 +15,11 @@ from wait import WaitPage
 
 class Action():
 
-    def __init__(self, driver, topictitle, topicurl):
+    def __init__(self, driver, topictitle, topicurl, pulltime):
         self.driver = driver
         self.topictitle = topictitle
         self.topicurl = topicurl
+        self.pulltime = pulltime
 
     
     def choose_topic(self):
@@ -30,7 +31,16 @@ class Action():
         driver.save_screenshot("./pictures/quora_movies0.png")
         soup = BeautifulSoup(driver.page_source,'lxml')
         print(soup.find('title').string)
-        
+
+        return driver
+
+    def pull_scrollbar(self):
+        driver = self.driver
+        for i in range(1, self.pulltime):
+            js="var q=document.documentElement.scrollTop=1000000"
+            driver.execute_script(js)
+            WaitPage("None", driver).wait_common_page()
+        driver.save_screenshot("./pictures/quora_movies2.png")
         return driver
 
 

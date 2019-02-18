@@ -4,8 +4,10 @@ def debug_signal_handler(signal, frame):
     pdb.set_trace()
 
 import urllib.request
+import time
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import ui
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,10 +22,22 @@ def crawl():
     password = "15hszhm961203"
     topictitle = "Movies - Quora"
     topicurl = "https://www.quora.com/topic/Movies"
+    pulltime = 3000
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
-    choose_movies = Action(driver, topictitle, topicurl)
+    choose_movies = Action(driver, topictitle, topicurl, pulltime)
     driver = choose_movies.choose_topic()
+
+    # pull the scrollTop to end
+    # js="var q=document.documentElement.scrollTop=10000"
+    # driver.execute_script(js)
+    # # driver.implicitly_wait(10)
+    # # wait = ui.WebDriverWait(driver, 10)
+    # # wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "pricerow")))
+    # driver.save_screenshot("./pictures/quora_movies1.png")
+
+    pull_bar = Action(driver, topictitle, topicurl, pulltime)
+    driver = pull_bar.pull_scrollbar()
 
 if __name__ == "__main__":
     crawl()
