@@ -15,8 +15,12 @@ from selenium.webdriver.common.keys import Keys
 from login import Login
 from wait import WaitPage
 from action import Action
+from pythondb import DataBase
 
-def crawl_link():
+def create_db():
+    DataBase(0, '0', '0').create_link_database()
+
+def crawl_links():
     homeurl = "https://www.quora.com/?prevent_redirect=1" # to use English as first language
     email = "3181276187@qq.com"
     password = "15hszhm961203"
@@ -50,11 +54,11 @@ def crawl_link():
         print(link)
         timestamp = timestamp2.get_text()
         print(timestamp)
-
+        DataBase(crawledquestions, link, timestamp).insert_record()
     print(crawledquestions)
 
 if __name__ == "__main__":
-    crawl_link()
-
+    create_db()
+    crawl_links()
 
 
