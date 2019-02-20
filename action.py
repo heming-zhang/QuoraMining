@@ -34,11 +34,13 @@ class Action():
 
         return driver
 
+
     def pull_scrollbar(self):
         driver = self.driver
         for i in range(1, self.pulltime):
-            js="var q=document.documentElement.scrollTop=1000000"
+            js="var q=document.documentElement.scrollTop=2000000"
             driver.execute_script(js)
+            # wait function need more exactitude
             WaitPage("None", driver).wait_common_page()
         driver.save_screenshot("./pictures/quora_movies2.png")
         return driver

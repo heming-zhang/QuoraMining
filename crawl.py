@@ -20,9 +20,9 @@ def crawl():
     homeurl = "https://www.quora.com/?prevent_redirect=1" # to use English as first language
     email = "3181276187@qq.com"
     password = "15hszhm961203"
-    topictitle = "Movies - Quora"
-    topicurl = "https://www.quora.com/topic/Movies"
-    pulltime = 3000
+    topictitle = "All Questions on Movies - Quora"
+    topicurl = "https://www.quora.com/topic/Movies/all_questions"
+    pulltime = 10000 # critical variable to control crawl length (2000000 scrollTop -> 10000 pulltime not enough to pull)
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
     choose_movies = Action(driver, topictitle, topicurl, pulltime)
@@ -31,9 +31,9 @@ def crawl():
     # pull the scrollTop to end
     # js="var q=document.documentElement.scrollTop=10000"
     # driver.execute_script(js)
-    # # driver.implicitly_wait(10)
-    # # wait = ui.WebDriverWait(driver, 10)
-    # # wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "pricerow")))
+    # driver.implicitly_wait(10)
+    # wait = ui.WebDriverWait(driver, 10)
+    # wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "pricerow")))
     # driver.save_screenshot("./pictures/quora_movies1.png")
 
     pull_bar = Action(driver, topictitle, topicurl, pulltime)
