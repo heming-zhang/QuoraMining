@@ -38,6 +38,7 @@ class Action():
     def pull_scrollbar(self):
         driver = self.driver
         for i in range(1, self.pulltime):
+            # tune variable scrollTop to update the length of pulling action
             js="var q=document.documentElement.scrollTop=2000000"
             driver.execute_script(js)
             # wait function need more exactitude

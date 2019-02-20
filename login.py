@@ -36,7 +36,10 @@ class Login():
 
         print (driver.current_url)
         driver.save_screenshot("./pictures/quora_home0.png")
-        soup = BeautifulSoup(driver.page_source,'lxml')
-        print(soup.find('title').string)
+        questionlink = driver.find_elements_by_class_name("question_link")
+        print(questionlink)
+
+        # soup = BeautifulSoup(driver.page_source,'lxml')
+        # print(soup.find('title').string)
 
         return driver

@@ -13,13 +13,16 @@ def donwload_page(link):
     return crawl.read()
 
 def extract_info():
-    initial_link = 'http://www.quora.com'
+    initial_link = 'http://www.baidu.com'
     html = donwload_page(initial_link)
     # use fast and powerful tool of lxml instead of html.parser
     soup = BeautifulSoup(html, 'lxml')
     # print(soup.prettify())
     # get text from the tags with title
-    print(soup.find('title').string)
+    link1 = soup.find_all('a')
+    for link2 in link1:
+        link = link2.get('href')
+        print(link)
 
 if __name__ == "__main__":
     extract_info()
