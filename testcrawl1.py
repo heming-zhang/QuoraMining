@@ -23,6 +23,8 @@ def extract_info():
     for link2 in link1:
         link = link2.get('href')
         print(link)
+        text = link2.get_text()
+        print(text)
 
 if __name__ == "__main__":
     extract_info()

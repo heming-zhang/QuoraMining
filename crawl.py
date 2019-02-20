@@ -22,6 +22,7 @@ def crawl_link():
     password = "15hszhm961203"
     topictitle = "All Questions on Movies - Quora"
     topicurl = "https://www.quora.com/topic/Movies/all_questions"
+    crawledquestions = 0
     pulltime = 100 # critical variable to control crawl length (2000000 scrollTop -> 10000 pulltime not enough to pull)
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
@@ -39,12 +40,21 @@ def crawl_link():
     pull_bar = Action(driver, topictitle, topicurl, pulltime)
     driver = pull_bar.pull_scrollbar()
 
-    # use bs4 to parse question link and question title
+    # use bs4 to parse question links and questions
     soup = BeautifulSoup(driver.page_source,'lxml')
     link1 = soup.find_all('a', class_='question_link')
-    for link2 in link1:
-        link = link2.get('href')
-        print('https://www.quora.com'+link)
+    timestamp1 = soup.find_all('span', class_='question_timestamp')
+    for link2, timestamp2 in zip(link1, timestamp1):
+        crawledquestions = crawledquestions + 1                                          
+        link = 'https://www.quora.com' + link2.get('href')
+        print(link)
+        timestamp = timestamp2.get_text()
+        print(timestamp)
+
+    print(crawledquestions)
 
 if __name__ == "__main__":
     crawl_link()
+
+
+
