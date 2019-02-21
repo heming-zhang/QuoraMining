@@ -13,7 +13,7 @@ from selenium.webdriver.support import ui
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from pythondb import DataBase
-
+from action import Action
 
 class ExtractInfo():
 
@@ -41,13 +41,39 @@ class ExtractInfo():
 
     def extract_content(self):
         driver = self.driver
-        questionlinks = DataBase(0, "0", "0").select_links()
+        questionlinks = DataBase(0, "0", "0").select_links() # all parsed links are here
         for links in questionlinks:
             print(links[1])
             driver.get(links[1])
             # use driver to parse html to extract content
             # insert question and answers into table movie
-        
+            soup = BeautifulSoup(driver.page_source,"lxml")
+            question1 = soup.find("title").string
+            question = question1.strip(" - Quora")
+            print(question) # into table
+            sign = soup.find("div", class_="prompt_title")
+            if sign == None:
+                answercount1 = soup.find("div", class_="answer_count")
+                answercount = answercount1.get_text()
+                print(answercount) # into table
+                pulltime = int(answercount.strip(" Answers")) * 50
+                print(pulltime)
+                pull_bar = Action(driver, "0", "0", pulltime)
+                driver = pull_bar.pull_scrollbar()
+
+                answertext = ''
+                answertext1 = soup.find_all('p', class_='ui_qtext_para u-ltr')
+                for answertext2 in answertext1:
+                    answertext = answertext + answertext2.get_text()
+                print(answertext) # into table
+            else:
+                tag = sign.get_text()
+                answercount = 0
+                print(tag)
+                print(answercount) # into table
+
+            # insert question; answercount; answertext into table movies
+
         return driver
 
 
