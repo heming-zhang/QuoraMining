@@ -7,6 +7,8 @@ import urllib.request
 from bs4 import BeautifulSoup
 from quoralogin import Quoralogin
 
+import pymysql 
+
 def donwload_page(link):
     crawl = urllib.request.urlopen(link)
     # print(crawl.read())
@@ -26,8 +28,25 @@ def extract_info():
         text = link2.get_text()
         print(text)
 
+def select_record():
+      # Open database connection
+      db = pymysql.connect(user = "root", password = "root",
+                           host = "127.0.0.1",
+                           database = "quora" )
+      # prepare a cursor object using cursor() method
+      cursor = db.cursor()
+      sql = """select * from movielinks1 order by rank"""
+      cursor.execute(sql)
+      movielinks = cursor.fetchall()
+      db.close()
+      print(movielinks)
+      return movielinks
+
+
 if __name__ == "__main__":
-    extract_info()
+        select_record()
+        # extract_info()
+
 
 
 

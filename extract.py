@@ -34,10 +34,22 @@ class ExtractInfo():
             print(link)
             timestamp = timestamp2.get_text()
             print(timestamp)
-            DataBase(crawledquestions, link, timestamp).insert_record()
+            DataBase(crawledquestions, link, timestamp).insert_link()
         print(crawledquestions)
 
         return driver
+
+    def extract_content(self):
+        driver = self.driver
+        questionlinks = DataBase(0, "0", "0").select_links()
+        for links in questionlinks:
+            print(links[1])
+            driver.get(links[1])
+            # use driver to parse html to extract content
+            # insert question and answers into table movie
+        
+        return driver
+
 
 
 

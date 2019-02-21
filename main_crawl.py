@@ -29,7 +29,7 @@ def crawl_links():
     password = "15hszhm961203"
     topictitle = "All Questions on Movies - Quora"
     topicurl = "https://www.quora.com/topic/Movies/all_questions"
-    pulltime = 10000 # critical variable to control crawl length (2000000 scrollTop -> 10000 pulltime not enough to pull)
+    pulltime = 100 # critical variable to control crawl length (2000000 scrollTop -> 10000 pulltime not enough to pull)
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
     choose_movies = Action(driver, topictitle, topicurl, pulltime)
@@ -38,10 +38,18 @@ def crawl_links():
     driver = pull_bar.pull_scrollbar()
     extract_links = ExtractInfo(driver)
     driver = extract_links.extract_questionlinks()
+    return driver
+
+
+def crawl_content():
+    driver = webdriver.Chrome(ChromeDriverManager().install()) 
+    extract_text = ExtractInfo(driver)
+    driver = extract_text.extract_content()
+    return driver
 
 
 if __name__ == "__main__":
     create_db()
     crawl_links()
-
+    crawl_content()
 
