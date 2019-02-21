@@ -34,34 +34,41 @@ class ExtractInfo():
             print(link)
             timestamp = timestamp2.get_text()
             print(timestamp)
-            DataBase(crawledquestions, link, timestamp).insert_link()
+            DataBase(crawledquestions, link, timestamp, 0, "0", "0").insert_link()
         print(crawledquestions)
 
         return driver
 
+
     def extract_content(self):
         driver = self.driver
-        questionlinks = DataBase(0, "0", "0").select_links() # all parsed links are here
+        questionlinks = DataBase(0, "0", "0", 0, "0", "0").select_links() # all parsed links are here
         for links in questionlinks:
-            print(links[1])
-            driver.get(links[1])
+            rank = int(links[0]) # into table
+            questionlink = links[1] # into table
+            timestamp = str(links[2]) # into table
+            answertext = '' # into table
+            print(rank)
+            print(timestamp)
+            driver.get(questionlink)
+            questionlink = str(questionlink)
+            print(questionlink)
             # use driver to parse html to extract content
             # insert question and answers into table movie
             soup = BeautifulSoup(driver.page_source,"lxml")
             question1 = soup.find("title").string
-            question = question1.strip(" - Quora")
+            question = str(question1.strip(" - Quora"))
             print(question) # into table
             sign = soup.find("div", class_="prompt_title")
             if sign == None:
                 answercount1 = soup.find("div", class_="answer_count")
-                answercount = answercount1.get_text()
-                print(answercount) # into table
-                pulltime = int(answercount.strip(" Answers")) * 50
+                answercount2 = answercount1.get_text()
+                answercount = int(answercount2.strip(" Answers"))
+                pulltime = answercount * 50
                 print(pulltime)
                 pull_bar = Action(driver, "0", "0", pulltime)
                 driver = pull_bar.pull_scrollbar()
 
-                answertext = ''
                 answertext1 = soup.find_all('p', class_='ui_qtext_para u-ltr')
                 for answertext2 in answertext1:
                     answertext = answertext + answertext2.get_text()
@@ -72,7 +79,8 @@ class ExtractInfo():
                 print(tag)
                 print(answercount) # into table
 
-            # insert question; answercount; answertext into table movies
+            # DataBase(0, 0, '0', '0', '0', '0').insert_content()
+            DataBase(rank, questionlink, timestamp, answercount, question, answertext).insert_content()
 
         return driver
 

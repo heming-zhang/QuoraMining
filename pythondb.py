@@ -2,11 +2,13 @@ import pymysql
 
 class DataBase():
 
-   def __init__(self, rank, questionlink, timestamp):
+   def __init__(self, rank, questionlink, timestamp, answercount, question, answertext):
       self.rank = rank
       self.questionlink = questionlink
       self.timestamp = timestamp
-
+      self.answercount = answercount
+      self.question = question
+      self.answertext = answertext
 
    def insert_link(self):
       rank = self.rank
@@ -38,6 +40,26 @@ class DataBase():
       questionlinks = cursor.fetchall()
       db.close()
       return questionlinks
+
+   def insert_content(self):
+      rank = self.rank
+      answercount = self.answercount
+      timestamp = self.timestamp
+      questionlink = self.questionlink
+      question = self.question
+      answertext = self.answertext
+      movies = []
+      movies.append((rank, answercount, timestamp, questionlink, question, answertext))
+       # Open database connection
+      db = pymysql.connect(user = "root", password = "root",
+                           host = "127.0.0.1",
+                           database = "quora" )
+      # prepare a cursor object using cursor() method
+      cursor = db.cursor()
+      sql = """insert into movies values(%s, %s, %s, %s, %s, %s)"""
+      cursor.executemany(sql, movies)
+      # disconnect from server
+      db.close()
 
 
    def create_link_database(self):
@@ -71,10 +93,11 @@ class DataBase():
       # Create table as per requirement
       sql = """create table movies(
          rank int not null,
+         answercount int,
+         timestamp varchar(50),
          questionlink varchar(200),
          question  varchar(200),
-         answer varchar(5000), 
-         timestamp varchar(50))"""
+         answertext varchar(5000))"""
       cursor.execute(sql)
       # disconnect from server
       db.close()

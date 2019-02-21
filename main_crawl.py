@@ -19,8 +19,8 @@ from pythondb import DataBase
 from extract import ExtractInfo
 
 def create_db():
-    DataBase(0, '0', '0').create_link_database()
-    DataBase(0, '0', '0').create_final_database()
+    DataBase(0, '0', '0', 0, '0', '0').create_link_database()
+    DataBase(0, '0', '0', 0, '0', '0').create_final_database()
 
 
 def crawl_links():
@@ -29,7 +29,7 @@ def crawl_links():
     password = "15hszhm961203"
     topictitle = "All Questions on Movies - Quora"
     topicurl = "https://www.quora.com/topic/Movies/all_questions"
-    pulltime = 1000 # critical variable to control crawl length (2000000 scrollTop -> 10000 pulltime not enough to pull)
+    pulltime = 100 # critical variable to control crawl length (2000000 scrollTop -> 10000 pulltime not enough to pull)
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
     choose_movies = Action(driver, topictitle, topicurl, pulltime)
