@@ -4,8 +4,18 @@ def debug_signal_handler(signal, frame):
     pdb.set_trace()
 
 import urllib.request
+import time
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support import ui
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+import urllib.request
 from bs4 import BeautifulSoup
 from quoralogin import Quoralogin
+from action import Action
 
 import pymysql 
 
@@ -18,14 +28,16 @@ def donwload_page(link):
     return crawl.read()
 
 def extract_info():
-    initial_link = 'https://www.quora.com/If-you-had-an-opportunity-to-star-in-a-movie-made-after-your-favorite-book-would-you'
-    html = donwload_page(initial_link)
+    driver = webdriver.Chrome(ChromeDriverManager().install()) 
+    initial_link = 'https://www.quora.com/If-you-were-to-make-a-movie-where-would-you-make-it'
+    driver.get(initial_link)
 #     html = str(html)
 #     str1 = 'If you had an opportunity to star in a movie made after your favorite book, would you?'
 #     print(html.find(str1))
-
+    pull_bar = Action(driver, "0", "0", 1000)
+    driver = pull_bar.pull_scrollbar()
     # use fast and powerful tool of lxml instead of html.parser
-    soup = BeautifulSoup(html, 'lxml')
+    soup = BeautifulSoup(driver.page_source, 'lxml')
     # print(soup.prettify())
     # get text from the tags with title
     link1 = soup.find('div', class_='prompt_title')

@@ -97,7 +97,7 @@ class DataBase():
          timestamp varchar(50),
          questionlink varchar(200),
          question  varchar(200),
-         answertext varchar(5000))"""
+         answertext varchar(65533))"""
       cursor.execute(sql)
       # disconnect from server
       db.close()
