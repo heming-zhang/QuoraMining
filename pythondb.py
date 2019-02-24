@@ -1,4 +1,5 @@
 import pymysql 
+import time
 
 class DataBase():
 
@@ -10,10 +11,29 @@ class DataBase():
       self.question = question
       self.answertext = answertext
 
+   # def insert_link(self):
+   #    rank = self.rank
+   #    questionlink = self.questionlink
+   #    timestamp = self.timestamp
+   #    questionlinks = []
+   #    questionlinks.append((rank, questionlink, timestamp))
+   #     # Open database connection
+   #    db = pymysql.connect(user = "root", password = "root",
+   #                         host = "127.0.0.1",
+   #                         database = "quora" )
+   #    # prepare a cursor object using cursor() method
+   #    cursor = db.cursor()
+   #    sql = """insert into questionlinks values(%s, %s, %s)"""
+   #    cursor.executemany(sql, questionlinks)
+   #    # disconnect from server
+   #    db.close()
+   
+
    def insert_link(self):
+      # to place into single table without repetition
       rank = self.rank
       questionlink = self.questionlink
-      timestamp = self.timestamp
+      timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + " " + self.timestamp
       questionlinks = []
       questionlinks.append((rank, questionlink, timestamp))
        # Open database connection
@@ -22,8 +42,14 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """insert into questionlinks values(%s, %s, %s)"""
-      cursor.executemany(sql, questionlinks)
+      # use loop to prevent repetition
+      for questionlink0 in questionlinks:
+         try:
+            sql = """insert into questionlinks values(%s, %s, %s)"""
+            cursor.execute(sql, questionlink0)
+         except Exception:
+            print("repetition", Exception)
+            continue
       # disconnect from server
       db.close()
    
@@ -74,7 +100,7 @@ class DataBase():
       # Create table as per requirement
       sql = """create table questionlinks (
          rank int,
-         questionlink varchar(200), 
+         questionlink varchar(200) primary key, 
          timestamp varchar(50))"""
       cursor.execute(sql)
       # disconnect from server
