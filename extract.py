@@ -70,7 +70,7 @@ class ExtractInfo():
                 pull_bar = Action(driver, "0", "0", pulltime)
                 driver = pull_bar.pull_scrollbar()
                 soup = BeautifulSoup(driver.page_source,"lxml")
-
+                
                 answertext1 = soup.find_all('p', class_='ui_qtext_para u-ltr')
                 for answertext2 in answertext1:
                     answertext = answertext + " " + answertext2.get_text()

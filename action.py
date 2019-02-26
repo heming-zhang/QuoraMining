@@ -39,11 +39,11 @@ class Action():
         driver = self.driver
         for i in range(1, self.pulltime):
             # tune variable scrollTop to update the length of pulling action
-            js="var q=document.documentElement.scrollTop=200000000"
+            js="var q=document.documentElement.scrollTop=1000000000"
             driver.execute_script(js)
             # wait function need more exactitude
             WaitPage("None", driver).wait_common_page()
-        driver.save_screenshot("./pictures/quora_movies2.png")
+        driver.save_screenshot("./pictures/quora_film and television.png")
         return driver
 
 

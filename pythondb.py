@@ -33,7 +33,7 @@ class DataBase():
       # to place into single table without repetition
       rank = self.rank
       questionlink = self.questionlink
-      timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + " " + self.timestamp
+      timestamp = time.strftime("%Y-%m-%d %H:%M", time.localtime()) + " " + self.timestamp
       questionlinks = []
       questionlinks.append((rank, questionlink, timestamp))
        # Open database connection
@@ -82,7 +82,7 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """insert into movies values(%s, %s, %s, %s, %s, %s)"""
+      sql = """insert into films_and_televisions values(%s, %s, %s, %s, %s, %s)"""
       cursor.executemany(sql, movies)
       # disconnect from server
       db.close()
@@ -115,9 +115,9 @@ class DataBase():
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
       # Drop table if it already exist using execute() method.
-      cursor.execute("drop table if exists movies")
+      cursor.execute("drop table if exists films_and_televisions")
       # Create table as per requirement
-      sql = """create table movies(
+      sql = """create table films_and_televisions(
          rank int not null,
          answercount int,
          timestamp varchar(50),
