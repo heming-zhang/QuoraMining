@@ -28,10 +28,12 @@ def crawl_links():
     email = "3181276187@qq.com"
     password = "15hszhm961203"
     # topictitle = "All Questions on Movies - Quora" 
-    topictitle = "All Questions on Film and Television - Quora"
+    # topictitle = "All Questions on Film and Television - Quora"
+    topictitle = "All Questions on TV Sitcoms - Quora"
     # topicurl = "https://www.quora.com/topic/Movies/all_questions"
-    topicurl = "https://www.quora.com/topic/Film-and-Television/all_questions"
-    pulltime = 200 # critical variable to control crawl length (2000000 scrollTop -> 10000 pulltime not enough to pull)
+    # topicurl = "https://www.quora.com/topic/Film-and-Television/all_questions"
+    topicurl = "https://www.quora.com/topic/TV-Sitcoms/all_questions"
+    pulltime = 20000
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
     choose_movies = Action(driver, topictitle, topicurl, pulltime)
@@ -51,7 +53,7 @@ def crawl_content():
 
 
 if __name__ == "__main__":
-    # create_db()
-    # crawl_links()
-    crawl_content()
+    create_db()
+    crawl_links()
+    # crawl_content()
 

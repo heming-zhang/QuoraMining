@@ -115,9 +115,9 @@ class DataBase():
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
       # Drop table if it already exist using execute() method.
-      cursor.execute("drop table if exists films_and_televisions")
+      cursor.execute("drop table if exists TV_Sitcoms") # films_and_televisions
       # Create table as per requirement
-      sql = """create table films_and_televisions(
+      sql = """create table TV_Sitcoms(
          rank int not null,
          answercount int,
          timestamp varchar(50),
