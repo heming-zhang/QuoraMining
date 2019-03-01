@@ -3,13 +3,15 @@ import time
 
 class DataBase():
 
-   def __init__(self, rank, questionlink, timestamp, answercount, question, answertext):
+   def __init__(self, rank, questionlink, timestamp, answercount, question, answertext, upvote, view):
       self.rank = rank
       self.questionlink = questionlink
       self.timestamp = timestamp
       self.answercount = answercount
       self.question = question
       self.answertext = answertext
+      self.upvote = upvote
+      self.view = view
 
    # def insert_link(self):
    #    rank = self.rank
@@ -33,7 +35,7 @@ class DataBase():
       # to place into single table without repetition
       rank = self.rank
       questionlink = self.questionlink
-      timestamp = time.strftime("%Y-%m-%d %H:%M", time.localtime()) + " " + self.timestamp
+      timestamp = self.timestamp
       questionlinks = []
       questionlinks.append((rank, questionlink, timestamp))
        # Open database connection
@@ -74,15 +76,17 @@ class DataBase():
       questionlink = self.questionlink
       question = self.question
       answertext = self.answertext
+      upvote = self.upvote
+      view = self.view
       movies = []
-      movies.append((rank, answercount, timestamp, questionlink, question, answertext))
+      movies.append((rank, answercount, timestamp, questionlink, question, view, upvote, answertext))
        # Open database connection
       db = pymysql.connect(user = "root", password = "root",
                            host = "127.0.0.1",
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """insert into films_and_televisions values(%s, %s, %s, %s, %s, %s)"""
+      sql = """insert into tv_sitcoms values(%s, %s, %s, %s, %s, %s, %s, %s)"""
       cursor.executemany(sql, movies)
       # disconnect from server
       db.close()
@@ -115,14 +119,16 @@ class DataBase():
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
       # Drop table if it already exist using execute() method.
-      cursor.execute("drop table if exists TV_Sitcoms") # films_and_televisions
+      cursor.execute("drop table if exists tv_sitcoms") # films_and_televisions
       # Create table as per requirement
-      sql = """create table TV_Sitcoms(
+      sql = """create table tv_sitcoms(
          rank int not null,
          answercount int,
          timestamp varchar(50),
          questionlink varchar(200),
          question  varchar(200),
+         views int,
+         upvote int,
          answertext varchar(65533))"""
       cursor.execute(sql)
       # disconnect from server

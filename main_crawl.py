@@ -30,10 +30,12 @@ def crawl_links():
     # topictitle = "All Questions on Movies - Quora" 
     # topictitle = "All Questions on Film and Television - Quora"
     topictitle = "All Questions on TV Sitcoms - Quora"
+    # topictitle = "All Questions on Television Series - Quora"
     # topicurl = "https://www.quora.com/topic/Movies/all_questions"
     # topicurl = "https://www.quora.com/topic/Film-and-Television/all_questions"
     topicurl = "https://www.quora.com/topic/TV-Sitcoms/all_questions"
-    pulltime = 20000
+    # topicurl = "https://www.quora.com/topic/Television-Series/all_questions"
+    pulltime = 200
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
     choose_movies = Action(driver, topictitle, topicurl, pulltime)
