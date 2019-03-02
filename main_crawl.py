@@ -19,8 +19,8 @@ from pythondb import DataBase
 from extract import ExtractInfo
 
 def create_db():
-    DataBase(0, '0', '0', 0, '0', '0', 0, 0).create_link_database()
-    DataBase(0, '0', '0', 0, '0', '0', 0, 0).create_final_database()
+    DataBase(0, '0', '0', 0, '0', '0', 0).create_link_database()
+    DataBase(0, '0', '0', 0, '0', '0', 0).create_final_database()
 
 
 def crawl_links():
@@ -35,7 +35,7 @@ def crawl_links():
     # topicurl = "https://www.quora.com/topic/Film-and-Television/all_questions"
     topicurl = "https://www.quora.com/topic/TV-Sitcoms/all_questions"
     # topicurl = "https://www.quora.com/topic/Television-Series/all_questions"
-    pulltime = 200
+    pulltime = 500
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
     choose_movies = Action(driver, topictitle, topicurl, pulltime)
@@ -55,7 +55,7 @@ def crawl_content():
 
 
 if __name__ == "__main__":
-    create_db()
+    # create_db()
     # crawl_links()
-    # crawl_content()
+    crawl_content()
 

@@ -34,7 +34,7 @@ class ExtractInfo():
             print(link)
             timestamp = timestamp2.get_text()
             print(timestamp)
-            DataBase(crawledquestions, link, timestamp, 0, "0", "0", 0, 0).insert_link()
+            DataBase(crawledquestions, link, timestamp, 0, "0", "0", 0).insert_link()
         print(crawledquestions)
 
         return driver
@@ -42,14 +42,14 @@ class ExtractInfo():
 
     def extract_content(self):
         driver = self.driver
-        questionlinks = DataBase(0, "0", "0", 0, "0", "0", 0, 0).select_links() # all parsed links are here
+        questionlinks = DataBase(0, "0", "0", 0, "0", "0", 0).select_links() # all parsed links are here
         for links in questionlinks:
+            print('----------------------------------------------')
             rank = int(links[0]) # into table
             questionlink = links[1] # into table
             timestamp = str(links[2]) # into table
             answertext = '' # into table
             view = 0
-            upvote = 0
             print(rank)
             print(timestamp)
             driver.get(questionlink)
@@ -71,25 +71,32 @@ class ExtractInfo():
                 print(pulltime)
                 pull_bar = Action(driver, "0", "0", pulltime)
                 driver = pull_bar.pull_scrollbar()
-                soup = BeautifulSoup(driver.page_source,"lxml")
-                
+                soup = BeautifulSoup(driver.page_source, "lxml")
+
                 # find every answer block and extract text + answertime(substitute timestamp) + upvote + view
-                
-                answertext1 = soup.find_all('p', class_='ui_qtext_para u-ltr')
-                for answertext2 in answertext1:
-                    answertext = answertext + " " + answertext2.get_text()
-                print(answertext) # into table
-                DataBase(rank, questionlink, timestamp, answercount, question, answertext, upvote, view).insert_content()
+                blocks = soup.find_all('div', class_='Answer AnswerBase')
+                for block in blocks:
+                    answertext = ''
+                    answertext1 = block.find_all('p', class_='ui_qtext_para u-ltr')
+                    for answertext2 in answertext1:
+                        answertext = answertext + " " + answertext2.get_text()
+                    print(answertext) # into table
+                    time = block.find('a', class_='answer_permalink')
+                    timestamp = time.get_text()
+                    views = block.find('span', class_='meta_num')
+                    view0 = views.get_text()
+                    kilo = view0.find('k')
+                    if kilo == -1 : view = int(view0)
+                    else:
+                        view0 = view0.strip('k')
+                        view = int(float(view0) * 1000)
+                    DataBase(rank, questionlink, timestamp, answercount, question, answertext, view).insert_content()
             else:
                 tag = sign.get_text()
                 answercount = 0
                 print(tag)
                 print(answercount) # into table
-                DataBase(rank, questionlink, timestamp, answercount, question, answertext, upvote, view).insert_content()
+                DataBase(rank, questionlink, timestamp, answercount, question, answertext, view).insert_content()
 
         return driver
-
-
-
-
 
