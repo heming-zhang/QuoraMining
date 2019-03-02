@@ -66,7 +66,11 @@ class ExtractInfo():
             if sign == None:
                 answercount1 = soup.find("div", class_="answer_count")
                 answercount2 = answercount1.get_text()
-                answercount = int(answercount2.strip(" Answers"))
+                answercount0 = answercount2.strip(" Answers")
+                more = answercount0.find('+')
+                if more == -1 : answercount = int(answercount0)
+                else:
+                    answercount = int(answercount0.strip('+'))
                 pulltime = answercount * 50
                 print(pulltime)
                 pull_bar = Action(driver, "0", "0", pulltime)
