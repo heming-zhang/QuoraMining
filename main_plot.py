@@ -7,7 +7,7 @@ from pythondb import DataBase
 import matplotlib.pyplot as plt
 import numpy as np
 
-def question_distr_plot():
+def question_distribution():
     questionlinks_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_questionlinks_date()
     Feb = 0
     Jan = 0
@@ -21,6 +21,7 @@ def question_distr_plot():
     May = 0
     Apr = 0
     Mar = 0
+    sumnumber = 0
     for links in questionlinks_date:
         date = str(links[2])
         if date.find('2019/2')>=0: Feb = Feb + 1
@@ -35,22 +36,13 @@ def question_distr_plot():
         if date.find('2018/5')>=0: May = May + 1
         if date.find('2018/4')>=0: Apr = Apr + 1
         if date.find('2018/3')>=0: Mar = Mar + 1
-    
-    print(Feb)
-    print(Jan)
-    print(Dec)
-    print(Nov)
-    print(Oct)
-    print(Sep)
-    print(Aug)
-    print(July)
-    print(June)
-    print(May)
-    print(Apr)
-    print(Mar)
-    return 0
+        sumnumber = sumnumber + 1
 
-def answer_distri_plot():
+    monthlist = ['Feb', 'Jan', 'Dec', 'Nov', 'Oct', 'Sep', 'Aug', 'July', 'June', 'May', 'Apr', 'Mar']
+    numberlist = [Feb, Jan, Dec, Nov, Oct, Sep, Aug, July, June, May, Apr, Mar]
+    return monthlist, numberlist, sumnumber
+
+def answer_distribution():
     tv_sitcoms_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
     zero = 0
     one = 0
@@ -67,6 +59,7 @@ def answer_distri_plot():
     twentymore = 0
     fiftymore = 0
     hundredmore = 0
+    sumcount = 0
     for links in tv_sitcoms_date:
         answercount = int(links[1])
         if answercount == 0: zero = zero + 1
@@ -84,24 +77,38 @@ def answer_distri_plot():
         if answercount > 20 and answercount <= 50: twentymore = twentymore + 1
         if answercount > 50 and answercount <= 100: fiftymore = fiftymore + 1
         if answercount > 100: hundredmore = hundredmore + 1
-    print(zero)
-    print(one)
-    print(two)
-    print(three)
-    print(four)
-    print(five)
-    print(six)
-    print(seven)
-    print(eight)
-    print(nine)
-    print(ten)
-    print(tenmore)
-    print(twentymore)
-    print(fiftymore)
-    print(hundredmore)
-    return 0
+        sumcount = sumcount + 0
+    namelist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '10+', '20+', '50+', '100+']
+    countlist = [zero, one, two, three, four, five, six, seven, eight, nine, ten, tenmore, twentymore, fiftymore, hundredmore]
+    return namelist, countlist, sumcount
 
+def plot():
+    monthlist, numberlist, sumnumber = question_distribution()
+    namelist, countlist, sumcount = answer_distribution()
+    # Questions Last Followed
+    plt.subplot(211)
+    plt.bar(monthlist, numberlist)
+    plt.ylim(0, 350)
+    for x, y in zip(monthlist, numberlist):
+        plt.text(x, y+25, '%.0f' % y, ha ='center', va='top')
+    plt.xlabel('A Year Span (From Mar, 2018 to Feb, 2019)')
+    plt.ylabel('Questions Last Followed Number')
+    plt.title('Questions Last Followed Number Varing with Time')
+    plt.tight_layout()
+    # Answercount Distribution
+    plt.subplot(212)
+    plt.bar(namelist, countlist)
+    plt.ylim(0, 1000)
+    for x, y in zip(namelist, countlist):
+        plt.text(x, y+85, '%.0f' % y, ha='center', va='top')
+    plt.xlabel('Answercount')
+    plt.ylabel('Answer Number')
+    plt.title('Answercount Distribution')
+    plt.tight_layout()
+    plt.savefig(".\pictures\plot1.png")
+    plt.show()
 
 if __name__ == "__main__":
-    # question_distr_plot()
-    answer_distri_plot()
+    question_distribution()
+    answer_distribution()
+    plot()
