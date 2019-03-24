@@ -1,0 +1,107 @@
+# -*- coding: utf-8 -*-
+import pdb
+def debug_signal_handler(signal, frame):
+    pdb.set_trace()
+
+from pythondb import DataBase
+import matplotlib.pyplot as plt
+import numpy as np
+
+def question_distr_plot():
+    questionlinks_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_questionlinks_date()
+    Feb = 0
+    Jan = 0
+    Dec = 0
+    Nov = 0
+    Oct = 0
+    Sep = 0
+    Aug = 0
+    July = 0
+    June = 0
+    May = 0
+    Apr = 0
+    Mar = 0
+    for links in questionlinks_date:
+        date = str(links[2])
+        if date.find('2019/2')>=0: Feb = Feb + 1
+        if date.find('2019/1')>=0: Jan = Jan + 1
+        if date.find('2018/12')>=0: Dec = Dec + 1
+        if date.find('2018/11')>=0: Nov = Nov + 1
+        if date.find('2018/10')>=0: Oct = Oct + 1
+        if date.find('2018/9')>=0: Sep = Sep + 1
+        if date.find('2018/8')>=0: Aug = Aug + 1
+        if date.find('2018/7')>=0: July = July + 1
+        if date.find('2018/6')>=0: June = June + 1
+        if date.find('2018/5')>=0: May = May + 1
+        if date.find('2018/4')>=0: Apr = Apr + 1
+        if date.find('2018/3')>=0: Mar = Mar + 1
+    
+    print(Feb)
+    print(Jan)
+    print(Dec)
+    print(Nov)
+    print(Oct)
+    print(Sep)
+    print(Aug)
+    print(July)
+    print(June)
+    print(May)
+    print(Apr)
+    print(Mar)
+    return 0
+
+def answer_distri_plot():
+    tv_sitcoms_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
+    zero = 0
+    one = 0
+    two = 0
+    three = 0
+    four = 0
+    five = 0
+    six = 0
+    seven = 0
+    eight = 0
+    nine = 0
+    ten = 0
+    tenmore = 0
+    twentymore = 0
+    fiftymore = 0
+    hundredmore = 0
+    for links in tv_sitcoms_date:
+        answercount = int(links[1])
+        if answercount == 0: zero = zero + 1
+        if answercount == 1: one = one + 1
+        if answercount == 2: two = two + 1
+        if answercount == 3: three = three + 1
+        if answercount == 4: four = four + 1
+        if answercount == 5: five = five + 1
+        if answercount == 6: six = six + 1
+        if answercount == 7: seven = seven + 1
+        if answercount == 8: eight = eight + 1
+        if answercount == 9: nine = nine + 1
+        if answercount == 10: ten = ten + 1
+        if answercount > 10 and answercount <= 20: tenmore = tenmore + 1
+        if answercount > 20 and answercount <= 50: twentymore = twentymore + 1
+        if answercount > 50 and answercount <= 100: fiftymore = fiftymore + 1
+        if answercount > 100: hundredmore = hundredmore + 1
+    print(zero)
+    print(one)
+    print(two)
+    print(three)
+    print(four)
+    print(five)
+    print(six)
+    print(seven)
+    print(eight)
+    print(nine)
+    print(ten)
+    print(tenmore)
+    print(twentymore)
+    print(fiftymore)
+    print(hundredmore)
+    return 0
+
+
+if __name__ == "__main__":
+    # question_distr_plot()
+    answer_distri_plot()

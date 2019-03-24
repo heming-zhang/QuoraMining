@@ -68,6 +68,35 @@ class DataBase():
       db.close()
       return questionlinks
 
+
+   def select_questionlinks_date(self):
+      # Open database connection
+      db = pymysql.connect(user = "root", password = "root",
+                           host = "127.0.0.1",
+                           database = "quora" )
+      # prepare a cursor object using cursor() method
+      cursor = db.cursor()
+      sql = """select * from questionlinks_sit_date_0228"""
+      cursor.execute(sql)
+      questionlinks_date = cursor.fetchall()
+      db.close()
+      return questionlinks_date
+
+
+   def select_answercount(self):
+      # Open database connection
+      db = pymysql.connect(user = "root", password = "root",
+                           host = "127.0.0.1",
+                           database = "quora" )
+      # prepare a cursor object using cursor() method
+      cursor = db.cursor()
+      sql = """select * from tv_sitcoms_answer_0228"""
+      cursor.execute(sql)
+      tv_sitcoms_answercount = cursor.fetchall()
+      db.close()
+      return tv_sitcoms_answercount
+
+
    def insert_content(self):
       rank = self.rank
       answercount = self.answercount
