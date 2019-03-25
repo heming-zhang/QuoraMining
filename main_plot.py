@@ -43,7 +43,7 @@ def question_distribution():
     return monthlist, numberlist, sumnumber
 
 def answer_distribution():
-    tv_sitcoms_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
+    tv_sitcoms_answercount = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
     zero = 0
     one = 0
     two = 0
@@ -60,7 +60,7 @@ def answer_distribution():
     fiftymore = 0
     hundredmore = 0
     sumcount = 0
-    for links in tv_sitcoms_date:
+    for links in tv_sitcoms_answercount:
         answercount = int(links[1])
         if answercount == 0: zero = zero + 1
         if answercount == 1: one = one + 1
@@ -90,7 +90,7 @@ def plot():
     plt.bar(monthlist, numberlist)
     plt.ylim(0, 350)
     for x, y in zip(monthlist, numberlist):
-        plt.text(x, y+25, '%.0f' % y, ha ='center', va='top')
+        plt.text(x, y+30, '%.0f' % y, ha ='center', va='top')
     plt.xlabel('A Year Span (From Mar, 2018 to Feb, 2019)')
     plt.ylabel('Questions Last Followed Number')
     plt.title('Questions Last Followed Number Varing with Time')
@@ -102,7 +102,7 @@ def plot():
     for x, y in zip(namelist, countlist):
         plt.text(x, y+85, '%.0f' % y, ha='center', va='top')
     plt.xlabel('Answercount')
-    plt.ylabel('Answer Number')
+    plt.ylabel('Answercount Number')
     plt.title('Answercount Distribution')
     plt.tight_layout()
     plt.savefig(".\pictures\plot1.png")

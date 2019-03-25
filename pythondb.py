@@ -90,12 +90,24 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from tv_sitcoms_answer_0228"""
+      sql = """select * from tv_sitcoms_answercount_0228"""
       cursor.execute(sql)
       tv_sitcoms_answercount = cursor.fetchall()
       db.close()
       return tv_sitcoms_answercount
 
+   def select_answertext(self):
+      # Open database connection
+      db = pymysql.connect(user = "root", password = "root",
+                           host = "127.0.0.1",
+                           database = "quora" )
+      # prepare a cursor object using cursor() method
+      cursor = db.cursor()
+      sql = """select * from tv_sitcoms_answertext_0228"""
+      cursor.execute(sql)
+      tv_sitcoms_answertext = cursor.fetchall()
+      db.close()
+      return tv_sitcoms_answertext
 
    def insert_content(self):
       rank = self.rank
