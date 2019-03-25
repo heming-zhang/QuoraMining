@@ -38,8 +38,8 @@ def question_distribution():
         if date.find('2018/3')>=0: Mar = Mar + 1
         sumnumber = sumnumber + 1
 
-    monthlist = ['Feb', 'Jan', 'Dec', 'Nov', 'Oct', 'Sep', 'Aug', 'July', 'June', 'May', 'Apr', 'Mar']
-    numberlist = [Feb, Jan, Dec, Nov, Oct, Sep, Aug, July, June, May, Apr, Mar]
+    monthlist = ['Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb']
+    numberlist = [Mar, Apr, May, June, July, Aug, Sep, Oct, Nov, Dec, Jan, Feb]
     return monthlist, numberlist, sumnumber
 
 def answer_distribution():
