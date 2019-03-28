@@ -76,18 +76,21 @@ class ExtractInfo():
                 pull_bar = Action(driver, "0", "0", pulltime)
                 driver = pull_bar.pull_scrollbar()
                 soup = BeautifulSoup(driver.page_source, "lxml")
-
                 # find every answer block and extract text + answertime(substitute timestamp) + upvote + view
-                blocks = soup.find_all('div', class_='Answer AnswerBase')
+
+                blocks = soup.find_all('div', class_='pagedlist_item')
+
                 for block in blocks:
                     answertext = ''
-                    answertext1 = block.find_all('p', class_='ui_qtext_para u-ltr')
+                    answertext1 = block.find_all('p', class_='ui_qtext_para u-ltr u-text-align--start') # ui_qtext_rendered_qtext
                     for answertext2 in answertext1:
                         answertext = answertext + " " + answertext2.get_text()
                     print(answertext) # into table
                     time = block.find('a', class_='answer_permalink')
+                    if time == None: continue
                     timestamp = time.get_text()
                     views = block.find('span', class_='meta_num')
+                    if views == None: continue
                     view0 = views.get_text()
                     kilo = view0.find('k')
                     if kilo == -1 : view = int(view0)
