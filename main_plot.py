@@ -9,37 +9,23 @@ import numpy as np
 
 def question_distribution():
     questionlinks_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_questionlinks_date()
+    Mar = 0
     Feb = 0
     Jan = 0
     Dec = 0
     Nov = 0
-    Oct = 0
-    Sep = 0
-    Aug = 0
-    July = 0
-    June = 0
-    May = 0
-    Apr = 0
-    Mar = 0
     sumnumber = 0
     for links in questionlinks_date:
         date = str(links[2])
+        if date.find('2019/3')>=0: Mar = Mar + 1
         if date.find('2019/2')>=0: Feb = Feb + 1
         if date.find('2019/1')>=0: Jan = Jan + 1
         if date.find('2018/12')>=0: Dec = Dec + 1
         if date.find('2018/11')>=0: Nov = Nov + 1
-        if date.find('2018/10')>=0: Oct = Oct + 1
-        if date.find('2018/9')>=0: Sep = Sep + 1
-        if date.find('2018/8')>=0: Aug = Aug + 1
-        if date.find('2018/7')>=0: July = July + 1
-        if date.find('2018/6')>=0: June = June + 1
-        if date.find('2018/5')>=0: May = May + 1
-        if date.find('2018/4')>=0: Apr = Apr + 1
-        if date.find('2018/3')>=0: Mar = Mar + 1
         sumnumber = sumnumber + 1
 
-    monthlist = ['Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb']
-    numberlist = [Mar, Apr, May, June, July, Aug, Sep, Oct, Nov, Dec, Jan, Feb]
+    monthlist = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar']
+    numberlist = [Nov, Dec, Jan, Feb, Mar]
     return monthlist, numberlist, sumnumber
 
 def answer_distribution():
@@ -88,19 +74,19 @@ def plot():
     # Questions Last Followed
     plt.subplot(211)
     plt.bar(monthlist, numberlist)
-    plt.ylim(0, 350)
+    plt.ylim(0, 1350)
     for x, y in zip(monthlist, numberlist):
-        plt.text(x, y+30, '%.0f' % y, ha ='center', va='top')
-    plt.xlabel('A Year Span (From Mar, 2018 to Feb, 2019)')
+        plt.text(x, y+110, '%.0f' % y, ha ='center', va='top')
+    plt.xlabel('A Season Span (From Nov, 2018 to Mar, 2019)')
     plt.ylabel('Questions Last Followed Number')
     plt.title('Questions Last Followed Number Varing with Time')
     plt.tight_layout()
     # Answercount Distribution
     plt.subplot(212)
     plt.bar(namelist, countlist)
-    plt.ylim(0, 1000)
+    plt.ylim(0, 2000)
     for x, y in zip(namelist, countlist):
-        plt.text(x, y+85, '%.0f' % y, ha='center', va='top')
+        plt.text(x, y+180, '%.0f' % y, ha='center', va='top')
     plt.xlabel('Answercount')
     plt.ylabel('Answercount Number')
     plt.title('Answercount Distribution')

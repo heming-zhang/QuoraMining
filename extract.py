@@ -65,6 +65,7 @@ class ExtractInfo():
             sign = soup.find("div", class_="prompt_title")
             if sign == None:
                 answercount1 = soup.find("div", class_="answer_count")
+                if answercount1 == None: continue
                 answercount2 = answercount1.get_text()
                 answercount0 = answercount2.strip(" Answers")
                 more = answercount0.find('+')
@@ -76,10 +77,9 @@ class ExtractInfo():
                 pull_bar = Action(driver, "0", "0", pulltime)
                 driver = pull_bar.pull_scrollbar()
                 soup = BeautifulSoup(driver.page_source, "lxml")
+
                 # find every answer block and extract text + answertime(substitute timestamp) + upvote + view
-
                 blocks = soup.find_all('div', class_='pagedlist_item')
-
                 for block in blocks:
                     answertext = ''
                     answertext1 = block.find_all('p', class_='ui_qtext_para u-ltr u-text-align--start') # ui_qtext_rendered_qtext

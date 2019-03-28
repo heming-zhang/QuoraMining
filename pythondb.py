@@ -44,7 +44,7 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from questionlinks order by rank"""
+      sql = """select * from questionlinks"""
       cursor.execute(sql)
       questionlinks = cursor.fetchall()
       db.close()
@@ -58,12 +58,11 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from questionlinks_sit_date_0228"""
+      sql = """select * from questionlinks_film_date_0327"""
       cursor.execute(sql)
       questionlinks_date = cursor.fetchall()
       db.close()
       return questionlinks_date
-
 
    def select_answercount(self):
       # Open database connection
@@ -72,7 +71,7 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from tv_sitcoms_answercount_0228"""
+      sql = """select * from films_answercount_0327"""
       cursor.execute(sql)
       tv_sitcoms_answercount = cursor.fetchall()
       db.close()
@@ -85,7 +84,7 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from tv_sitcoms_answertext_0228"""
+      sql = """select * from films_answertext_0327"""
       cursor.execute(sql)
       tv_sitcoms_answertext = cursor.fetchall()
       db.close()
