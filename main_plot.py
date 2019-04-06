@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import pdb
 def debug_signal_handler(signal, frame):
     pdb.set_trace()
@@ -7,8 +8,10 @@ from pythondb import DataBase
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def question_distribution():
     questionlinks_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_questionlinks_date()
+    Mar1 = 0
     Mar = 0
     Feb = 0
     Jan = 0
@@ -23,9 +26,13 @@ def question_distribution():
         if date.find('2018/12')>=0: Dec = Dec + 1
         if date.find('2018/11')>=0: Nov = Nov + 1
         sumnumber = sumnumber + 1
+        
+        datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
+        datenum = int(datenorm.strftime('%Y%m%d'))
+        if datenum > 20190321: Mar1 = Mar1 + 1
 
-    monthlist = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar']
-    numberlist = [Nov, Dec, Jan, Feb, Mar]
+    monthlist = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Mar1']
+    numberlist = [Nov, Dec, Jan, Feb, Mar, Mar1]
     return monthlist, numberlist, sumnumber
 
 def answer_distribution():

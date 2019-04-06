@@ -49,7 +49,6 @@ def text_clean(text):
 def text_clean_run():
     text_cleaned = []
     alltextlist_feb = classify_doc()
-    # text_protect_list = ['F.R.I.E.N.D.S', 'Friends', 'friends', 'Big Bang Theory', 'Big bang theory', 'big bang theory']
     text_cleaned0 = [text_clean(text).split() for text in alltextlist_feb] 
     fw = open('./textfiles/Feb, 2019.txt', 'w')
     for list1 in text_cleaned0:
