@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import numpy as np
 import pdb
 def debug_signal_handler(signal, frame):
     pdb.set_trace()
@@ -11,29 +12,47 @@ import numpy as np
 
 def question_distribution():
     questionlinks_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_questionlinks_date()
-    Mar1 = 0
-    Mar = 0
-    Feb = 0
-    Jan = 0
-    Dec = 0
-    Nov = 0
-    sumnumber = 0
+    Mar, Mar1, Mar2, Mar3, Mar4 = 0, 0, 0, 0, 0
+    Feb, Feb1, Feb2, Feb3, Feb4 = 0, 0, 0, 0, 0
+    Jan, Jan1, Jan2, Jan3, Jan4 = 0, 0, 0, 0, 0
+    Dec, Dec0, Dec1, Dec2, Dec3, Dec4= 0, 0, 0, 0, 0, 0
+
     for links in questionlinks_date:
         date = str(links[2])
-        if date.find('2019/3')>=0: Mar = Mar + 1
-        if date.find('2019/2')>=0: Feb = Feb + 1
-        if date.find('2019/1')>=0: Jan = Jan + 1
-        if date.find('2018/12')>=0: Dec = Dec + 1
-        if date.find('2018/11')>=0: Nov = Nov + 1
-        sumnumber = sumnumber + 1
-        
+        # if date.find('2019/3')>=0: Mar = Mar + 1
+        # if date.find('2019/2')>=0: Feb = Feb + 1
+        # if date.find('2019/1')>=0: Jan = Jan + 1
+        # if date.find('2018/12')>=0: Dec = Dec + 1
         datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
         datenum = int(datenorm.strftime('%Y%m%d'))
-        if datenum > 20190321: Mar1 = Mar1 + 1
-
-    monthlist = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Mar1']
-    numberlist = [Nov, Dec, Jan, Feb, Mar, Mar1]
-    return monthlist, numberlist, sumnumber
+        if datenum >= 20190321: Mar4 = Mar4 + 1
+        if datenum >= 20190314 and datenum < 20190321: Mar3 = Mar3 + 1
+        if datenum >= 20190307 and datenum < 20190314: Mar2 = Mar2 + 1
+        if datenum >= 20190301 and datenum < 20190307: Mar1 = Mar1 + 1
+        if datenum >= 20190222 and datenum < 20190301: Feb4 = Feb4 + 1
+        if datenum >= 20190215 and datenum < 20190222: Feb3 = Feb3 + 1
+        if datenum >= 20190208 and datenum < 20190215: Feb2 = Feb2 + 1
+        if datenum >= 20190201 and datenum < 20190208: Feb1 = Feb1 + 1
+        if datenum >= 20190125 and datenum < 20190201: Jan4 = Jan4 + 1
+        if datenum >= 20190118 and datenum < 20190125: Jan3 = Jan3 + 1
+        if datenum >= 20190111 and datenum < 20190118: Jan2 = Jan2 + 1
+        if datenum >= 20190104 and datenum < 20190111: Jan1 = Jan1 + 1
+        if datenum >= 20181228 and datenum < 20190104: Dec4 = Dec4 + 1
+        if datenum >= 20181221 and datenum < 20181228: Dec3 = Dec3 + 1
+        if datenum >= 20181214 and datenum < 20181221: Dec2 = Dec2 + 1
+        if datenum >= 20181206 and datenum < 20181214: Dec1 = Dec1 + 1
+        
+    monthlist = ['Dec1', 'Dec2', 'Dec3', 'Dec4',
+                'Jan1', 'Jan2', 'Jan3', 'Jan4', 
+                'Feb1', 'Feb2', 'Feb3', 'Feb4',
+                'Mar1', 'Mar2', 'Mar3', 'Mar4']
+    numberlist = [Dec1, Dec2, Dec3, Dec4,  
+                Jan1, Jan2, Jan3, Jan4, 
+                Feb1, Feb2, Feb3, Feb4, 
+                Mar1, Mar2, Mar3, Mar4]
+    nummean = np.mean(numberlist)
+    
+    return monthlist, numberlist, nummean
 
 def answer_distribution():
     tv_sitcoms_answercount = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
@@ -76,22 +95,26 @@ def answer_distribution():
     return namelist, countlist, sumcount
 
 def plot():
-    monthlist, numberlist, sumnumber = question_distribution()
+    monthlist, numberlist, nummean = question_distribution()
     namelist, countlist, sumcount = answer_distribution()
     # Questions Last Followed
     plt.subplot(211)
     plt.bar(monthlist, numberlist)
-    plt.ylim(0, 1350)
+    lim=[nummean]*16
+    plt.plot(lim, 'r--', label = 'mean of questions last followed in weeks')
+
+    plt.legend()
+    plt.ylim(0, 390)
     for x, y in zip(monthlist, numberlist):
-        plt.text(x, y+110, '%.0f' % y, ha ='center', va='top')
-    plt.xlabel('A Season Span (From Nov, 2018 to Mar, 2019)')
+        plt.text(x, y+35, '%.0f' % y, ha ='center', va='top')
+    plt.xlabel('A Season Span (From Dec, 2018 to Mar, 2019)')
     plt.ylabel('Questions Last Followed Number')
-    plt.title('Questions Last Followed Number Varing with Time')
+    plt.title('Questions Last Followed Number Varing in Weeks')
     plt.tight_layout()
     # Answercount Distribution
     plt.subplot(212)
     plt.bar(namelist, countlist)
-    plt.ylim(0, 2000)
+    plt.ylim(0, 1950)
     for x, y in zip(namelist, countlist):
         plt.text(x, y+180, '%.0f' % y, ha='center', va='top')
     plt.xlabel('Answercount')
