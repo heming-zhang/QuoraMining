@@ -40,6 +40,10 @@ def classify_doc():
                 for i in range(view_weight): # use view_weight to add weight
                     alltextlist.append(answer)
             # print(date, question, view_weight, answer)
+    fw = open('./textfiles/Ori-Mar4, 2019.txt', 'w')
+    for text in alltextlist:
+        text = text + "\n"
+        fw.write(text)
     # print(alltextlist)
     return alltextlist
 
@@ -56,13 +60,26 @@ def text_clean_set():
 
 def text_clean(text):
     stop, exclude, lemma= text_clean_set()
+    # free numbers
     num_free = re.sub(r'\d+', '', text)
-    punc_free = re.sub("—", "", num_free)
-    punc_free0 = re.sub("\'", "", punc_free)
-    punc_free1 = "".join(ch for ch in punc_free0 if ch not in exclude)
-    stop_free1 = " ".join([i for i in punc_free1.lower().split() if i not in stop])
-    punc_free2 = "".join(ch for ch in stop_free1 if ch not in exclude)
-    normalized = " ".join(lemma.lemmatize(word) for word in punc_free2.split())
+    # free English abbreviation
+    abr_free0 = re.sub("’s", "", num_free)
+    abr_free1 = re.sub("’re", "", abr_free0)
+    abr_free2 = re.sub("’ve", "", abr_free1)
+    abr_free3 = re.sub("’m", "", abr_free2)
+    abr_free4 = re.sub("n’t", "", abr_free3)
+    # free Chinese puncuation
+    punc_free0 = re.sub("–", "", abr_free4)
+    punc_free1 = re.sub("—", "", punc_free0)
+    punc_free2 = re.sub("\…", "", punc_free1)
+    punc_free3 = re.sub("\‘", "", punc_free2)
+    punc_free4 = re.sub("\’", "", punc_free3)
+    punc_free5 = re.sub("\“", "", punc_free4)
+    punc_free6 = re.sub("\”", "", punc_free5)
+    # English free
+    stop_free = " ".join([i for i in punc_free6.lower().split() if i not in stop])
+    punc_free = "".join(ch for ch in stop_free if ch not in exclude)
+    normalized = " ".join(lemma.lemmatize(word) for word in punc_free.split())
     return normalized
 
 
@@ -86,7 +103,8 @@ def text_clean_run():
 
 
 def btm_model():
-    texts = open('./textfiles/Mar4, 2019.txt').read().splitlines()
+
+    texts = open('./textfiles/Ori-Mar4, 2019.txt').read().splitlines()
 
     # vectorize texts
     vec = CountVectorizer(stop_words='english')
@@ -99,14 +117,24 @@ def btm_model():
     biterms = vec_to_biterms(X)
 
     # create btm
-    btm = oBTM(num_topics=20, V=vocab)
+    btm = oBTM(num_topics=10, V=vocab)
 
     print("\n\n Train Online BTM ..")
-    for i in range(0, len(biterms), 100): # prozess chunk of 200 texts
+    for i in range(0, 1): # prozess chunk of 200 texts
         biterms_chunk = biterms[i:i + 100]
-        btm.fit(biterms_chunk, iterations=50)
+        btm.fit(biterms_chunk, iterations=30)
     topics = btm.transform(biterms)
 
+    # print("\n\n Visualize Topics ..")
+    # vis = pyLDAvis.prepare(btm.phi_wz.T, topics, np.count_nonzero(X, axis=1), vocab, np.sum(X, axis=0))
+    # pyLDAvis.save_html(vis, './textfiles/online_btm.html')
+
+    print("\n\n Topic coherence ..")
+    topic_summuary(btm.phi_wz.T, X, vocab, 10)
+
+    # print("\n\n Texts & Topics ..")
+    # for i in range(len(texts)):
+    #     print("{} (topic: {})".format(texts[i], topics[i].argmax()))
 
 
 def lda_model():
@@ -168,7 +196,8 @@ if __name__ == "__main__":
     # lda_model()
     # tfidf_model()
     # kmeans_model()
-    get_wordfrequency()
+    # get_wordfrequency()
+    btm_model()
 
 
     # 写出lda的循环调参并绘图
