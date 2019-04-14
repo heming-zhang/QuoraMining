@@ -8,6 +8,10 @@ from gensim.utils import simple_preprocess
 from gensim.models import CoherenceModel
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
+from biterm.btm import oBTM
+from sklearn.feature_extraction.text import CountVectorizer
+from biterm.utility import vec_to_biterms, topic_summuary
+import pyLDAvis
 import spacy
 import datetime
 import gensim
@@ -81,6 +85,30 @@ def text_clean_run():
     return text_cleaned2, text_cleaned0
 
 
+def btm_model():
+    texts = open('./textfiles/Mar4, 2019.txt').read().splitlines()
+
+    # vectorize texts
+    vec = CountVectorizer(stop_words='english')
+    X = vec.fit_transform(texts).toarray()
+
+    # get vocabulary
+    vocab = np.array(vec.get_feature_names())
+
+    # get biterms
+    biterms = vec_to_biterms(X)
+
+    # create btm
+    btm = oBTM(num_topics=20, V=vocab)
+
+    print("\n\n Train Online BTM ..")
+    for i in range(0, len(biterms), 100): # prozess chunk of 200 texts
+        biterms_chunk = biterms[i:i + 100]
+        btm.fit(biterms_chunk, iterations=50)
+    topics = btm.transform(biterms)
+
+
+
 def lda_model():
     text_cleaned2, text_cleaned0 = text_clean_run()
     dictionary = corpora.Dictionary(text_cleaned2)
@@ -143,4 +171,4 @@ if __name__ == "__main__":
     get_wordfrequency()
 
 
-    # 接下来就是 聚类方法试一下；写出lda的循环调参并绘图
+    # 写出lda的循环调参并绘图
