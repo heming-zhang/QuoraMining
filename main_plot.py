@@ -102,7 +102,6 @@ def plot():
     plt.bar(monthlist, numberlist)
     lim=[nummean]*16
     plt.plot(lim, 'r--', label = 'mean of questions last followed in weeks')
-
     plt.legend()
     plt.ylim(0, 390)
     for x, y in zip(monthlist, numberlist):
@@ -111,6 +110,7 @@ def plot():
     plt.ylabel('Questions Last Followed Number')
     plt.title('Questions Last Followed Number Varing in Weeks')
     plt.tight_layout()
+
     # Answercount Distribution
     plt.subplot(212)
     plt.bar(namelist, countlist)

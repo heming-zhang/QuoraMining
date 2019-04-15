@@ -11,6 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from biterm.btm import oBTM
 from sklearn.feature_extraction.text import CountVectorizer
 from biterm.utility import vec_to_biterms, topic_summuary
+import matplotlib.pyplot as plt
 import pyLDAvis
 import spacy
 import datetime
@@ -46,6 +47,7 @@ def classify_doc():
         fw.write(text)
     # print(alltextlist)
     return alltextlist
+
 
 def text_clean_set():
     stop = stopwords.words('english')
@@ -102,59 +104,33 @@ def text_clean_run():
     return text_cleaned2, text_cleaned0
 
 
-def btm_model():
-
-    texts = open('./textfiles/Ori-Mar4, 2019.txt').read().splitlines()
-
-    # vectorize texts
-    vec = CountVectorizer(stop_words='english')
-    X = vec.fit_transform(texts).toarray()
-
-    # get vocabulary
-    vocab = np.array(vec.get_feature_names())
-
-    # get biterms
-    biterms = vec_to_biterms(X)
-
-    # create btm
-    btm = oBTM(num_topics=10, V=vocab)
-
-    print("\n\n Train Online BTM ..")
-    for i in range(0, 1): # prozess chunk of 200 texts
-        biterms_chunk = biterms[i:i + 100]
-        btm.fit(biterms_chunk, iterations=30)
-    topics = btm.transform(biterms)
-
-    # print("\n\n Visualize Topics ..")
-    # vis = pyLDAvis.prepare(btm.phi_wz.T, topics, np.count_nonzero(X, axis=1), vocab, np.sum(X, axis=0))
-    # pyLDAvis.save_html(vis, './textfiles/online_btm.html')
-
-    print("\n\n Topic coherence ..")
-    topic_summuary(btm.phi_wz.T, X, vocab, 10)
-
-    # print("\n\n Texts & Topics ..")
-    # for i in range(len(texts)):
-    #     print("{} (topic: {})".format(texts[i], topics[i].argmax()))
+def get_wordfrequency():
+    text_cleaned2, text_cleaned0  = text_clean_run()
+    print(collections.Counter(text_cleaned0))
 
 
-def lda_model():
+def lda_model(num_topics):
+    num_topics = num_topics
     text_cleaned2, text_cleaned0 = text_clean_run()
     dictionary = corpora.Dictionary(text_cleaned2)
     # dictionary.filter_extremes(no_below=15, no_above=0.5, keep_n=100000)
     doc_term_matrix = [dictionary.doc2bow(doc) for doc in text_cleaned2]
     # using Bag of Words
     Lda = gensim.models.ldamodel.LdaModel
-    ldamodel = Lda(doc_term_matrix, num_topics=5, id2word = dictionary, passes=50)
-    print(ldamodel.print_topics(num_topics=5, num_words=8))
+    ldamodel = Lda(doc_term_matrix, num_topics=num_topics, id2word = dictionary, iterations=50)
+    print(ldamodel.print_topics(num_topics=num_topics, num_words=10))
     # Compute Perplexity
-    print('\nPerplexity: ', ldamodel.log_perplexity(doc_term_matrix))  # a measure of how good the model is. lower the better.
+    perplexity_lda = ldamodel.log_perplexity(doc_term_matrix)
+    print('\nPerplexity: ', perplexity_lda)  # a measure of how good the model is. lower the better.
     # Compute Coherence Score
-    coherence_model_lda = CoherenceModel(model=ldamodel, texts=text_cleaned2, dictionary=dictionary, coherence='c_v')
+    coherence_model_lda = CoherenceModel(model=ldamodel, texts=text_cleaned2, dictionary=dictionary, coherence='c_v') # u_mass
     coherence_lda = coherence_model_lda.get_coherence()
     print('\nCoherence Score: ', coherence_lda)
+    return perplexity_lda, coherence_lda
 
 
-def tfidf_model():
+def tfidf_model(num_topics):
+    num_topics = num_topics
     text_cleaned2, text_cleaned0  = text_clean_run()
     dictionary = corpora.Dictionary(text_cleaned2)
     doc_term_matrix = [dictionary.doc2bow(doc) for doc in text_cleaned2]
@@ -162,15 +138,48 @@ def tfidf_model():
     Lda = gensim.models.ldamodel.LdaModel
     tfidf = models.TfidfModel(doc_term_matrix)
     corpus_tfidf = tfidf[doc_term_matrix]
-    ldamodel_tfidf = Lda(corpus_tfidf, num_topics=10, id2word = dictionary, passes=50)
-    print(ldamodel_tfidf.print_topics(num_topics=10, num_words=5))
+    ldamodel_tfidf = Lda(corpus_tfidf, num_topics=num_topics, id2word = dictionary, iterations=50)
+    print(ldamodel_tfidf.print_topics(num_topics=num_topics, num_words=10))
 
     # Compute Perplexity
-    print('\nPerplexity: ', ldamodel_tfidf.log_perplexity(doc_term_matrix))  # a measure of how good the model is. lower the better.
+    perplexity_tfidf = ldamodel_tfidf.log_perplexity(doc_term_matrix)
+    print('\nPerplexity: ', perplexity_tfidf)  # a measure of how good the model is. lower the better.
     # Compute Coherence Score
-    coherence_model_lda = CoherenceModel(model=ldamodel_tfidf, texts=text_cleaned2, dictionary=dictionary, coherence='c_v')
-    coherence_tfidf = coherence_model_lda.get_coherence()
+    coherence_model_tfidf = CoherenceModel(model=ldamodel_tfidf, texts=text_cleaned2, dictionary=dictionary, coherence='c_v')
+    coherence_tfidf = coherence_model_tfidf.get_coherence()
     print('\nCoherence Score: ', coherence_tfidf)
+    return perplexity_tfidf, coherence_tfidf
+
+
+def btm_model(num_topics):
+    num_topics = num_topics
+    texts = open('./textfiles/Ori-Mar4, 2019.txt').read().splitlines()
+    # vectorize texts
+    vec = CountVectorizer(stop_words='english')
+    X = vec.fit_transform(texts).toarray()
+    # get vocabulary
+    vocab = np.array(vec.get_feature_names())
+    # get biterms
+    biterms = vec_to_biterms(X)
+    # create btm
+    btm = oBTM(num_topics = num_topics, V = vocab)
+    print("\n\n Train Online BTM ..")
+    for i in range(0, 1): # prozess chunk of 200 texts
+        biterms_chunk = biterms[i:i + 100]
+        btm.fit(biterms_chunk, iterations=10)
+    
+    print("\n\n Topic coherence ..")
+    topic_summuary(btm.phi_wz.T, X, vocab, 10)
+
+    topics = btm.transform(biterms)
+    # print("\n\n Visualize Topics ..")
+    # vis = pyLDAvis.prepare(btm.phi_wz.T, topics, np.count_nonzero(X, axis=1), vocab, np.sum(X, axis=0))
+    # pyLDAvis.save_html(vis, './textfiles/online_btm.html')
+
+    # print("\n\n Texts & Topics ..")
+    # for i in range(len(texts)):
+        # print(topics[i].argmax())
+        # print("{} (topic: {})".format(texts[i], topics[i].argmax()))
 
 
 def kmeans_model():
@@ -187,17 +196,45 @@ def kmeans_model():
     print(clusters)
 
 
-def get_wordfrequency():
-    text_cleaned2, text_cleaned0  = text_clean_run()
-    print(collections.Counter(text_cleaned0))
+def lda_plot():
+    epoch_time = 10
+    perplexity_ldas = []
+    coherence_ldas = []
+    for num_topics in range(1, epoch_time + 1):
+        perplexity_lda, coherence_lda = lda_model(num_topics)
+        perplexity_ldas.append(perplexity_lda)
+        coherence_ldas.append(coherence_lda)
+
+    plt.subplot(211)
+    X = range(1, epoch_time + 1)
+    plt.plot(X, coherence_ldas, label = "lda-coherence")
+    plt.xlabel("epoch time")
+    plt.ylabel("coherence")
+    plt.title("LDA-coherence-graph")
+    plt.legend()
+    plt.tight_layout()
+
+    plt.subplot(212)
+    X = range(1, epoch_time + 1)
+    plt.plot(X, perplexity_ldas, label = "lda-perplexity")
+    plt.xlabel("epoch time")
+    plt.ylabel("perplexity")
+    plt.title("LDA-perplexity-graph")
+    plt.legend()
+    plt.tight_layout()
+
+    plt.show()
 
 
 if __name__ == "__main__":
-    # lda_model()
-    # tfidf_model()
+    num_topics = 5
+    # lda_model(num_topics)
+    tfidf_model(num_topics)
+    # btm_model(num_topics)
+
+
     # kmeans_model()
     # get_wordfrequency()
-    btm_model()
+    
+    # lda_plot()
 
-
-    # 写出lda的循环调参并绘图
