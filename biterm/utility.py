@@ -19,6 +19,7 @@ def topic_summuary(P_wz, X, V, M, verbose=True):
     }
     for z, P_wzi in enumerate(P_wz):
         V_z = np.argsort(P_wzi)[:-(M + 1):-1]
+        P_z = np.sort(P_wzi)[:-(M + 1):-1]
         W_z = V[V_z]
 
         # calculate topic coherence score -> http://dirichlet.net/pdf/mimno11optimizing.pdf
@@ -34,7 +35,7 @@ def topic_summuary(P_wz, X, V, M, verbose=True):
         res['top_words'][z] = W_z
         if verbose: 
             print('Topic {} | Coherence={:0.2f} | Top words= {}'.format(z, C_z, ' '.join(W_z)))
-            print(V_z)
+            print(P_z)
     return res
 
 class Lexicon:

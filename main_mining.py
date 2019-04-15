@@ -86,7 +86,9 @@ def text_clean(text):
 
 
 def text_clean_run():
+    temp_text = ""
     text_cleaned0 = [] # text_cleaned0 has only one list
+    text_cleaned1 = []
     alltextlist = classify_doc()
     text_cleaned2 = [text_clean(text).split() for text in alltextlist] 
     fw = open('./textfiles/Mar4, 2019.txt', 'w')
@@ -97,21 +99,23 @@ def text_clean_run():
             else:
                 list2 = list2 + "\t"
                 fw.write(list2)
-
+        temp_text = " ".join(list1)
+        text_cleaned1.append(temp_text)
+    # print(text_cleaned1) # text_cleaned1 has many single word in lists
     # fr = open('./textfiles/Mar4, 2019.txt', 'r')
     # print(fr.read())
     # print(text_cleaned0) # text_cleaned2 has many lists in list
-    return text_cleaned2, text_cleaned0
+    return text_cleaned2, text_cleaned1, text_cleaned0
 
 
 def get_wordfrequency():
-    text_cleaned2, text_cleaned0  = text_clean_run()
+    text_cleaned2, text_cleaned1, text_cleaned0  = text_clean_run()
     print(collections.Counter(text_cleaned0))
 
 
 def lda_model(num_topics):
     num_topics = num_topics
-    text_cleaned2, text_cleaned0 = text_clean_run()
+    text_cleaned2, text_cleaned1, text_cleaned0 = text_clean_run()
     dictionary = corpora.Dictionary(text_cleaned2)
     # dictionary.filter_extremes(no_below=15, no_above=0.5, keep_n=100000)
     doc_term_matrix = [dictionary.doc2bow(doc) for doc in text_cleaned2]
@@ -131,7 +135,7 @@ def lda_model(num_topics):
 
 def tfidf_model(num_topics):
     num_topics = num_topics
-    text_cleaned2, text_cleaned0  = text_clean_run()
+    text_cleaned2, text_cleaned1, text_cleaned0  = text_clean_run()
     dictionary = corpora.Dictionary(text_cleaned2)
     doc_term_matrix = [dictionary.doc2bow(doc) for doc in text_cleaned2]
     # using TF-IDF
@@ -153,10 +157,12 @@ def tfidf_model(num_topics):
 
 def btm_model(num_topics):
     num_topics = num_topics
-    texts = open('./textfiles/Ori-Mar4, 2019.txt').read().splitlines()
+    # texts = open('./textfiles/Ori-Mar4, 2019.txt').read().splitlines()
+    text_cleaned2, texts, text_cleaned0 = text_clean_run()
     # vectorize texts
     vec = CountVectorizer(stop_words='english')
     X = vec.fit_transform(texts).toarray()
+    print(X[1:])
     # get vocabulary
     vocab = np.array(vec.get_feature_names())
     # get biterms
@@ -169,9 +175,9 @@ def btm_model(num_topics):
         btm.fit(biterms_chunk, iterations=10)
     
     print("\n\n Topic coherence ..")
-    topic_summuary(btm.phi_wz.T, X, vocab, 10)
+    topic_summuary(btm.phi_wz.T, X, vocab, 15)
 
-    topics = btm.transform(biterms)
+    # topics = btm.transform(biterms)
     # print("\n\n Visualize Topics ..")
     # vis = pyLDAvis.prepare(btm.phi_wz.T, topics, np.count_nonzero(X, axis=1), vocab, np.sum(X, axis=0))
     # pyLDAvis.save_html(vis, './textfiles/online_btm.html')
@@ -227,11 +233,10 @@ def lda_plot():
 
 
 if __name__ == "__main__":
-    num_topics = 5
+    num_topics = 6
     # lda_model(num_topics)
-    tfidf_model(num_topics)
-    # btm_model(num_topics)
-
+    # tfidf_model(num_topics)
+    btm_model(num_topics)
 
     # kmeans_model()
     # get_wordfrequency()
