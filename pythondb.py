@@ -58,7 +58,7 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from questionlinks_film_date_0327"""
+      sql = """select * from questionlinks_film_date_0414"""
       cursor.execute(sql)
       questionlinks_date = cursor.fetchall()
       db.close()
@@ -72,11 +72,11 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from films_answercount_0327"""
+      sql = """select * from films_answercount_0414"""
       cursor.execute(sql)
-      tv_sitcoms_answercount = cursor.fetchall()
+      films_answercount = cursor.fetchall()
       db.close()
-      return tv_sitcoms_answercount
+      return films_answercount
 
 
    def select_answertext(self):
@@ -86,11 +86,11 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from films_answertext_0327"""
+      sql = """select * from films_answertext_0414"""
       cursor.execute(sql)
-      tv_sitcoms_answertext = cursor.fetchall()
+      films_answertext = cursor.fetchall()
       db.close()
-      return tv_sitcoms_answertext
+      return films_answertext
 
 
    def insert_content(self):

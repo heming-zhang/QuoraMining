@@ -3,6 +3,7 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer
+from pyLDAvis import gensim
 from gensim import corpora, models
 from gensim.utils import simple_preprocess
 from gensim.models import CoherenceModel
@@ -23,10 +24,10 @@ import string
 import numpy as np
 
 
-def classify_doc():
+def ori_classify_doc():
     alltextlist = []
-    tv_sitcoms_answertext = DataBase(0, '0', '0', 0, '0', '0', 0).select_answertext()
-    for text in tv_sitcoms_answertext: 
+    films_answertext = DataBase(0, '0', '0', 0, '0', '0', 0).select_answertext()
+    for text in films_answertext: 
         answercount = int(text[1])
         date = str(text[2])
         question = str(text[4])
@@ -35,13 +36,39 @@ def classify_doc():
         datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
         datenum = int(datenorm.strftime('%Y%m%d'))
         # change datenum limitation to control weeks
-        if datenum >= 20190321:
+        if datenum >= 20190408:
+            alltextlist.append(question) # use append or just use '+' to aggregate string
+            if answercount > 0 : 
+                # for i in range(view_weight): # use view_weight to add weight
+                    alltextlist.append(answer)
+            # print(date, question, view_weight, answer)
+    fw = open('./textfiles/Ori-Apr2, 2019.txt', 'w')
+    for text in alltextlist:
+        text = text + "\n"
+        fw.write(text)
+    # print(alltextlist)
+    return alltextlist
+
+
+def classify_doc():
+    alltextlist = []
+    films_answertext = DataBase(0, '0', '0', 0, '0', '0', 0).select_answertext()
+    for text in films_answertext: 
+        answercount = int(text[1])
+        date = str(text[2])
+        question = str(text[4])
+        view_weight = (int(text[5]) // 50) + 1 # weight to improve topic mining
+        answer = str(text[6])
+        datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
+        datenum = int(datenorm.strftime('%Y%m%d'))
+        # change datenum limitation to control weeks
+        if datenum >= 20190408:
             alltextlist.append(question) # use append or just use '+' to aggregate string
             if answercount > 0 : 
                 for i in range(view_weight): # use view_weight to add weight
                     alltextlist.append(answer)
             # print(date, question, view_weight, answer)
-    fw = open('./textfiles/Ori-Mar4, 2019.txt', 'w')
+    fw = open('./textfiles/Ori-Apr2, 2019.txt', 'w')
     for text in alltextlist:
         text = text + "\n"
         fw.write(text)
@@ -85,13 +112,13 @@ def text_clean(text):
     return normalized
 
 
-def text_clean_run():
+def ori_text_clean_run():
     temp_text = ""
     text_cleaned0 = [] # text_cleaned0 has only one list
     text_cleaned1 = []
-    alltextlist = classify_doc()
+    alltextlist = ori_classify_doc()
     text_cleaned2 = [text_clean(text).split() for text in alltextlist] 
-    fw = open('./textfiles/Mar4, 2019.txt', 'w')
+    fw = open('./textfiles/Apr2, 2019.txt', 'w')
     for list1 in text_cleaned2:
         for list2 in list1:
             text_cleaned0.append(list2)
@@ -102,7 +129,30 @@ def text_clean_run():
         temp_text = " ".join(list1)
         text_cleaned1.append(temp_text)
     # print(text_cleaned1) # text_cleaned1 has many single word in lists
-    # fr = open('./textfiles/Mar4, 2019.txt', 'r')
+    # fr = open('./textfiles/Apr2, 2019.txt', 'r')
+    # print(fr.read())
+    # print(text_cleaned0) # text_cleaned2 has many lists in list
+    return text_cleaned2, text_cleaned1, text_cleaned0
+
+
+def text_clean_run():
+    temp_text = ""
+    text_cleaned0 = [] # text_cleaned0 has only one list
+    text_cleaned1 = []
+    alltextlist = classify_doc()
+    text_cleaned2 = [text_clean(text).split() for text in alltextlist] 
+    fw = open('./textfiles/Apr2, 2019.txt', 'w')
+    for list1 in text_cleaned2:
+        for list2 in list1:
+            text_cleaned0.append(list2)
+            if list2 == "": continue
+            else:
+                list2 = list2 + "\t"
+                fw.write(list2)
+        temp_text = " ".join(list1)
+        text_cleaned1.append(temp_text)
+    # print(text_cleaned1) # text_cleaned1 has many single word in lists
+    # fr = open('./textfiles/Apr2, 2019.txt', 'r')
     # print(fr.read())
     # print(text_cleaned0) # text_cleaned2 has many lists in list
     return text_cleaned2, text_cleaned1, text_cleaned0
@@ -152,17 +202,19 @@ def tfidf_model(num_topics):
     coherence_model_tfidf = CoherenceModel(model=ldamodel_tfidf, texts=text_cleaned2, dictionary=dictionary, coherence='c_v')
     coherence_tfidf = coherence_model_tfidf.get_coherence()
     print('\nCoherence Score: ', coherence_tfidf)
+    # visualize the LDA results
+    vis = pyLDAvis.gensim.prepare(ldamodel_tfidf, corpus_tfidf, dictionary)
+    pyLDAvis.save_html(vis, './pictures/tf-idf lda.html')
     return perplexity_tfidf, coherence_tfidf
 
 
 def btm_model(num_topics):
     num_topics = num_topics
-    # texts = open('./textfiles/Ori-Mar4, 2019.txt').read().splitlines()
+    # texts = open('./textfiles/Ori-Apr2, 2019.txt').read().splitlines()
     text_cleaned2, texts, text_cleaned0 = text_clean_run()
     # vectorize texts
     vec = CountVectorizer(stop_words='english')
     X = vec.fit_transform(texts).toarray()
-    print(X[1:])
     # get vocabulary
     vocab = np.array(vec.get_feature_names())
     # get biterms
@@ -175,17 +227,55 @@ def btm_model(num_topics):
         btm.fit(biterms_chunk, iterations=10)
     
     print("\n\n Topic coherence ..")
-    topic_summuary(btm.phi_wz.T, X, vocab, 15)
+    res, C_z_sum = topic_summuary(btm.phi_wz.T, X, vocab, 15)
+    Coherence_mean = C_z_sum/num_topics
+    print(Coherence_mean)
 
     # topics = btm.transform(biterms)
     # print("\n\n Visualize Topics ..")
     # vis = pyLDAvis.prepare(btm.phi_wz.T, topics, np.count_nonzero(X, axis=1), vocab, np.sum(X, axis=0))
     # pyLDAvis.save_html(vis, './textfiles/online_btm.html')
-
+    
     # print("\n\n Texts & Topics ..")
     # for i in range(len(texts)):
         # print(topics[i].argmax())
         # print("{} (topic: {})".format(texts[i], topics[i].argmax()))
+    return Coherence_mean
+
+
+def ori_btm_model(num_topics):
+    num_topics = num_topics
+    # texts = open('./textfiles/Ori-Apr2, 2019.txt').read().splitlines()
+    text_cleaned2, texts, text_cleaned0 = ori_text_clean_run()
+    # vectorize texts
+    vec = CountVectorizer(stop_words='english')
+    X = vec.fit_transform(texts).toarray()
+    # get vocabulary
+    vocab = np.array(vec.get_feature_names())
+    # get biterms
+    biterms = vec_to_biterms(X)
+    # create btm
+    btm = oBTM(num_topics = num_topics, V = vocab)
+    print("\n\n Train Online BTM ..")
+    for i in range(0, 1): # prozess chunk of 200 texts
+        biterms_chunk = biterms[i:i + 100]
+        btm.fit(biterms_chunk, iterations=10)
+    
+    print("\n\n Topic coherence ..")
+    res, C_z_sum = topic_summuary(btm.phi_wz.T, X, vocab, 15)
+    Coherence_mean = C_z_sum/num_topics
+    print(Coherence_mean)
+
+    # topics = btm.transform(biterms)
+    # print("\n\n Visualize Topics ..")
+    # vis = pyLDAvis.prepare(btm.phi_wz.T, topics, np.count_nonzero(X, axis=1), vocab, np.sum(X, axis=0))
+    # pyLDAvis.save_html(vis, './textfiles/online_btm.html')
+    
+    # print("\n\n Texts & Topics ..")
+    # for i in range(len(texts)):
+        # print(topics[i].argmax())
+        # print("{} (topic: {})".format(texts[i], topics[i].argmax()))
+    return Coherence_mean
 
 
 def kmeans_model():
@@ -202,8 +292,8 @@ def kmeans_model():
     print(clusters)
 
 
-def lda_plot():
-    epoch_time = 10
+def lda_plot(epoch_time):
+    epoch_time = epoch_time
     perplexity_ldas = []
     coherence_ldas = []
     for num_topics in range(1, epoch_time + 1):
@@ -213,33 +303,90 @@ def lda_plot():
 
     plt.subplot(211)
     X = range(1, epoch_time + 1)
-    plt.plot(X, coherence_ldas, label = "lda-coherence")
-    plt.xlabel("epoch time")
-    plt.ylabel("coherence")
-    plt.title("LDA-coherence-graph")
+    plt.plot(X, coherence_ldas, label = "LDA-Coherence")
+    plt.xlabel("Number of Topics")
+    plt.ylabel("Coherence")
+    plt.title("LDA-Coherence-Graph")
     plt.legend()
     plt.tight_layout()
 
     plt.subplot(212)
     X = range(1, epoch_time + 1)
-    plt.plot(X, perplexity_ldas, label = "lda-perplexity")
-    plt.xlabel("epoch time")
-    plt.ylabel("perplexity")
-    plt.title("LDA-perplexity-graph")
+    plt.plot(X, perplexity_ldas, label = "LDA-Perplexity")
+    plt.xlabel("Number of Topics")
+    plt.ylabel("Perplexity")
+    plt.title("LDA-Perplexity-Graph")
     plt.legend()
     plt.tight_layout()
 
     plt.show()
+    plt.savefig("./pictures/LDA Coherence.jpg")
+
+
+def tfidf_lda_plot(epoch_time):
+    epoch_time = epoch_time
+    perplexity_tldas = []
+    coherence_tldas = []
+    for num_topics in range(1, epoch_time + 1):
+        perplexity_tlda, coherence_tlda = tfidf_model(num_topics)
+        perplexity_tldas.append(perplexity_tlda)
+        coherence_tldas.append(coherence_tlda)
+
+    plt.subplot(211)
+    X = range(1, epoch_time + 1)
+    plt.plot(X, coherence_tldas, label = "LDA-Coherence")
+    plt.xlabel("Number of Topics")
+    plt.ylabel("Coherence")
+    plt.title("LDA-Coherence-Graph")
+    plt.legend()
+    plt.tight_layout()
+
+    plt.subplot(212)
+    X = range(1, epoch_time + 1)
+    plt.plot(X, perplexity_tldas, label = "LDA-Perplexity")
+    plt.xlabel("Number of Topics")
+    plt.ylabel("Perplexity")
+    plt.title("LDA-Perplexity-Graph")
+    plt.legend()
+    plt.tight_layout()
+
+    plt.show()
+    plt.savefig("./pictures/Tf-Idf LDA Coherence.jpg")
+
+
+def btm_plot(epoch_time):
+    epoch_time = epoch_time
+    coherence_btms = []
+    ori_coherence_btms = []
+    for num_topics in range(1, epoch_time + 1):
+
+        coherence_btm = btm_model(num_topics)
+        coherence_btms.append(coherence_btm)
+
+        ori_coherence_btm = ori_btm_model(num_topics)
+        ori_coherence_btms.append(ori_coherence_btm)
+
+    X = range(1, epoch_time + 1)
+    plt.plot(X, coherence_btms, label = "BTM-Coherence")
+    plt.plot(X, ori_coherence_btms, label = "Ori_BTM-Coherence")
+    plt.xlabel("Number of Topics")
+    plt.ylabel("Coherence")
+    plt.title("BTM-Coherence-Graph")
+    plt.legend()
+    plt.show()
+    plt.savefig("./pictures/BTM-Coherence.jpg")
 
 
 if __name__ == "__main__":
     num_topics = 6
     # lda_model(num_topics)
     # tfidf_model(num_topics)
-    btm_model(num_topics)
-
+    # btm_model(num_topics)
     # kmeans_model()
     # get_wordfrequency()
     
-    # lda_plot()
+    # epoch_time = 50
+    # lda_plot(epoch_time)
+    # tfidf_lda_plot(epoch_time)
+    # btm_plot(epoch_time)
 

@@ -12,6 +12,7 @@ import numpy as np
 
 def question_distribution():
     questionlinks_date = DataBase(0, '0', '0', 0, '0', '0', 0).select_questionlinks_date()
+    Apr, Apr1, Apr2 = 0, 0, 0
     Mar, Mar1, Mar2, Mar3, Mar4 = 0, 0, 0, 0, 0
     Feb, Feb1, Feb2, Feb3, Feb4 = 0, 0, 0, 0, 0
     Jan, Jan1, Jan2, Jan3, Jan4 = 0, 0, 0, 0, 0
@@ -25,37 +26,41 @@ def question_distribution():
         # if date.find('2018/12')>=0: Dec = Dec + 1
         datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
         datenum = int(datenorm.strftime('%Y%m%d'))
-        if datenum >= 20190321: Mar4 = Mar4 + 1
-        if datenum >= 20190314 and datenum < 20190321: Mar3 = Mar3 + 1
-        if datenum >= 20190307 and datenum < 20190314: Mar2 = Mar2 + 1
-        if datenum >= 20190301 and datenum < 20190307: Mar1 = Mar1 + 1
-        if datenum >= 20190222 and datenum < 20190301: Feb4 = Feb4 + 1
-        if datenum >= 20190215 and datenum < 20190222: Feb3 = Feb3 + 1
-        if datenum >= 20190208 and datenum < 20190215: Feb2 = Feb2 + 1
-        if datenum >= 20190201 and datenum < 20190208: Feb1 = Feb1 + 1
-        if datenum >= 20190125 and datenum < 20190201: Jan4 = Jan4 + 1
-        if datenum >= 20190118 and datenum < 20190125: Jan3 = Jan3 + 1
-        if datenum >= 20190111 and datenum < 20190118: Jan2 = Jan2 + 1
-        if datenum >= 20190104 and datenum < 20190111: Jan1 = Jan1 + 1
-        if datenum >= 20181228 and datenum < 20190104: Dec4 = Dec4 + 1
-        if datenum >= 20181221 and datenum < 20181228: Dec3 = Dec3 + 1
-        if datenum >= 20181214 and datenum < 20181221: Dec2 = Dec2 + 1
-        if datenum >= 20181206 and datenum < 20181214: Dec1 = Dec1 + 1
+        if datenum >= 20190409: Apr2 = Apr2 + 1
+        if datenum >= 20190401 and datenum < 20190408: Apr1 = Apr1 + 1
+        if datenum >= 20190325 and datenum < 20190401: Mar4 = Mar4 + 1
+        if datenum >= 20190318 and datenum < 20190325: Mar3 = Mar3 + 1
+        if datenum >= 20190311 and datenum < 20190318: Mar2 = Mar2 + 1
+        if datenum >= 20190304 and datenum < 20190311: Mar1 = Mar1 + 1
+        if datenum >= 20190225 and datenum < 20190304: Feb4 = Feb4 + 1
+        if datenum >= 20190218 and datenum < 20190225: Feb3 = Feb3 + 1
+        if datenum >= 20190211 and datenum < 20190218: Feb2 = Feb2 + 1
+        if datenum >= 20190204 and datenum < 20190211: Feb1 = Feb1 + 1
+        if datenum >= 20190128 and datenum < 20190204: Jan4 = Jan4 + 1
+        if datenum >= 20190121 and datenum < 20190128: Jan3 = Jan3 + 1
+        if datenum >= 20190115 and datenum < 20190121: Jan2 = Jan2 + 1
+        if datenum >= 20190107 and datenum < 20190114: Jan1 = Jan1 + 1
+        if datenum >= 20181231 and datenum < 20190107: Dec4 = Dec4 + 1
+        if datenum >= 20181224 and datenum < 20181231: Dec3 = Dec3 + 1
+        if datenum >= 20181217 and datenum < 20181224: Dec2 = Dec2 + 1
+        if datenum >= 20181210 and datenum < 20181217: Dec1 = Dec1 + 1
         
     monthlist = ['Dec1', 'Dec2', 'Dec3', 'Dec4',
                 'Jan1', 'Jan2', 'Jan3', 'Jan4', 
                 'Feb1', 'Feb2', 'Feb3', 'Feb4',
-                'Mar1', 'Mar2', 'Mar3', 'Mar4']
+                'Mar1', 'Mar2', 'Mar3', 'Mar4',
+                'Apr1', 'Apr2']
     numberlist = [Dec1, Dec2, Dec3, Dec4,  
                 Jan1, Jan2, Jan3, Jan4, 
                 Feb1, Feb2, Feb3, Feb4, 
-                Mar1, Mar2, Mar3, Mar4]
+                Mar1, Mar2, Mar3, Mar4,
+                Apr1, Apr2]
     nummean = np.mean(numberlist)
     
     return monthlist, numberlist, nummean
 
 def answer_distribution():
-    tv_sitcoms_answercount = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
+    films_answercount = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
     zero = 0
     one = 0
     two = 0
@@ -72,7 +77,7 @@ def answer_distribution():
     fiftymore = 0
     hundredmore = 0
     sumcount = 0
-    for links in tv_sitcoms_answercount:
+    for links in films_answercount:
         answercount = int(links[1])
         if answercount == 0: zero = zero + 1
         if answercount == 1: one = one + 1
@@ -100,7 +105,7 @@ def plot():
     # Questions Last Followed
     plt.subplot(211)
     plt.bar(monthlist, numberlist)
-    lim=[nummean]*16
+    lim=[nummean]*18
     plt.plot(lim, 'r--', label = 'mean of questions last followed in weeks')
     plt.legend()
     plt.ylim(0, 390)
