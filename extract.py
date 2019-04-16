@@ -89,9 +89,16 @@ class ExtractInfo():
                     time = block.find('a', class_='answer_permalink')
                     if time == None: continue
                     timestamp = time.get_text()
-                    views = block.find('span', class_='meta_num')
+                    views = block.find('div', class_='ContentFooter AnswerFooter ReadingContentFooter')
+                    if views == None: views = block.find('div', class_='ContentFooter ReadingContentFooter AnswerFooter')                        
+                    if views == None: views = block.find('div', class_='AnswerFooter ContentFooter ReadingContentFooter')
+                    if views == None: views = block.find('div', class_='AnswerFooter ReadingContentFooter ContentFooter')
+                    if views == None: views = block.find('div', class_='ReadingContentFooter AnswerFooter ContentFooter')
+                    if views == None: views = block.find('div', class_='ReadingContentFooter ContentFooter AnswerFooter')
                     if views == None: continue
-                    view0 = views.get_text()
+                    view0 = views.contents[0].strip()
+                    view0 = view0.strip(' views')
+                    print(view0)
                     kilo = view0.find('k')
                     if kilo == -1 : view = int(view0)
                     else:

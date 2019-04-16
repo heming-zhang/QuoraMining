@@ -64,6 +64,7 @@ class DataBase():
       db.close()
       return questionlinks_date
 
+
    def select_answercount(self):
       # Open database connection
       db = pymysql.connect(user = "root", password = "root",
@@ -77,6 +78,7 @@ class DataBase():
       db.close()
       return tv_sitcoms_answercount
 
+
    def select_answertext(self):
       # Open database connection
       db = pymysql.connect(user = "root", password = "root",
@@ -89,6 +91,7 @@ class DataBase():
       tv_sitcoms_answertext = cursor.fetchall()
       db.close()
       return tv_sitcoms_answertext
+
 
    def insert_content(self):
       rank = self.rank
