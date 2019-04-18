@@ -62,13 +62,13 @@ def classify_doc():
         datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
         datenum = int(datenorm.strftime('%Y%m%d'))
         # change datenum limitation to control weeks
-        if datenum >= 20190408:
+        if datenum >= 20190325 and datenum < 20190401:
             alltextlist.append(question) # use append or just use '+' to aggregate string
             if answercount > 0 : 
-                for i in range(view_weight): # use view_weight to add weight
+                # for i in range(view_weight): # use view_weight to add weight
                     alltextlist.append(answer)
             # print(date, question, view_weight, answer)
-    fw = open('./textfiles/Ori-Apr2, 2019.txt', 'w')
+    fw = open('./textfiles/Dec2, 2019.txt', 'w')
     for text in alltextlist:
         text = text + "\n"
         fw.write(text)
@@ -227,7 +227,7 @@ def btm_model(num_topics):
         btm.fit(biterms_chunk, iterations=10)
     
     print("\n\n Topic coherence ..")
-    res, C_z_sum = topic_summuary(btm.phi_wz.T, X, vocab, 15)
+    res, C_z_sum = topic_summuary(btm.phi_wz.T, X, vocab, 20)
     Coherence_mean = C_z_sum/num_topics
     print(Coherence_mean)
 
@@ -262,7 +262,7 @@ def ori_btm_model(num_topics):
         btm.fit(biterms_chunk, iterations=10)
     
     print("\n\n Topic coherence ..")
-    res, C_z_sum = topic_summuary(btm.phi_wz.T, X, vocab, 15)
+    res, C_z_sum = topic_summuary(btm.phi_wz.T, X, vocab, 20)
     Coherence_mean = C_z_sum/num_topics
     print(Coherence_mean)
 
@@ -381,7 +381,7 @@ if __name__ == "__main__":
     num_topics = 6
     # lda_model(num_topics)
     # tfidf_model(num_topics)
-    # btm_model(num_topics)
+    btm_model(num_topics)
     # kmeans_model()
     # get_wordfrequency()
     
