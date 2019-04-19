@@ -62,7 +62,7 @@ def classify_doc():
         datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
         datenum = int(datenorm.strftime('%Y%m%d'))
         # change datenum limitation to control weeks
-        if datenum >= 20190325 and datenum < 20190401:
+        if datenum >= 20190211 and datenum < 20190218:
             alltextlist.append(question) # use append or just use '+' to aggregate string
             if answercount > 0 : 
                 # for i in range(view_weight): # use view_weight to add weight
@@ -203,8 +203,8 @@ def tfidf_model(num_topics):
     coherence_tfidf = coherence_model_tfidf.get_coherence()
     print('\nCoherence Score: ', coherence_tfidf)
     # visualize the LDA results
-    vis = pyLDAvis.gensim.prepare(ldamodel_tfidf, corpus_tfidf, dictionary)
-    pyLDAvis.save_html(vis, './pictures/tf-idf lda.html')
+    # vis = pyLDAvis.gensim.prepare(ldamodel_tfidf, corpus_tfidf, dictionary)
+    # pyLDAvis.save_html(vis, './pictures/tf-idf lda.html')
     return perplexity_tfidf, coherence_tfidf
 
 
@@ -334,24 +334,51 @@ def tfidf_lda_plot(epoch_time):
 
     plt.subplot(211)
     X = range(1, epoch_time + 1)
-    plt.plot(X, coherence_tldas, label = "LDA-Coherence")
+    plt.plot(X, coherence_tldas, label = "Tf Idf-LDA-Coherence")
     plt.xlabel("Number of Topics")
     plt.ylabel("Coherence")
-    plt.title("LDA-Coherence-Graph")
+    plt.title("Tf Idf-LDA-Coherence-Graph")
     plt.legend()
     plt.tight_layout()
 
     plt.subplot(212)
     X = range(1, epoch_time + 1)
-    plt.plot(X, perplexity_tldas, label = "LDA-Perplexity")
+    plt.plot(X, perplexity_tldas, label = "Tf Idf-LDA-Perplexity")
     plt.xlabel("Number of Topics")
     plt.ylabel("Perplexity")
-    plt.title("LDA-Perplexity-Graph")
+    plt.title("Tf Idf-LDA-Perplexity-Graph")
     plt.legend()
     plt.tight_layout()
 
     plt.show()
     plt.savefig("./pictures/Tf-Idf LDA Coherence.jpg")
+
+
+def comparison_plot(epoch_time):
+    epoch_time = epoch_time
+    coherence_ldas = []
+    coherence_tfidfs = []
+    perplexity_ldas = []
+    perplexity_tfidfs = []
+    for num_topics in range(1, epoch_time + 1):
+
+        perplexity_lda, coherence_lda = lda_model(num_topics)
+        perplexity_ldas.append(perplexity_lda)
+        coherence_ldas.append(coherence_lda)
+
+        perplexity_tfidf, coherence_tfidf = tfidf_model(num_topics)
+        perplexity_tfidfs.append(perplexity_tfidf)
+        coherence_tfidfs.append(coherence_tfidf)
+
+    X = range(1, epoch_time + 1)
+    plt.plot(X, perplexity_ldas, label = "LDA-Perplexity")
+    plt.plot(X, perplexity_tfidfs, label = "Tf-Idf_LDA-Perplexity")
+    plt.xlabel("Number of Topics")
+    plt.ylabel("Perplexity")
+    plt.title("LDA-Perplexity-Graph")
+    plt.legend()
+    plt.show()
+    plt.savefig("./pictures/LDA-Perplexity.jpg")
 
 
 def btm_plot(epoch_time):
@@ -381,11 +408,11 @@ if __name__ == "__main__":
     num_topics = 6
     # lda_model(num_topics)
     # tfidf_model(num_topics)
-    btm_model(num_topics)
+    # btm_model(num_topics)
     # kmeans_model()
     # get_wordfrequency()
     
-    # epoch_time = 50
+    epoch_time = 30
     # lda_plot(epoch_time)
     # tfidf_lda_plot(epoch_time)
     # btm_plot(epoch_time)

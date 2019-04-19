@@ -45,12 +45,12 @@ def question_distribution():
         if datenum >= 20181217 and datenum < 20181224: Dec2 = Dec2 + 1
         if datenum >= 20181210 and datenum < 20181217: Dec1 = Dec1 + 1
         
-    monthlist = ['Dec1', 'Dec2', 'Dec3', 'Dec4',
+    monthlist = ['Dec2', 'Dec3', 'Dec4',
                 'Jan1', 'Jan2', 'Jan3', 'Jan4', 
                 'Feb1', 'Feb2', 'Feb3', 'Feb4',
                 'Mar1', 'Mar2', 'Mar3', 'Mar4',
                 'Apr1', 'Apr2']
-    numberlist = [Dec1, Dec2, Dec3, Dec4,  
+    numberlist = [Dec2, Dec3, Dec4,  
                 Jan1, Jan2, Jan3, Jan4, 
                 Feb1, Feb2, Feb3, Feb4, 
                 Mar1, Mar2, Mar3, Mar4,
@@ -61,18 +61,8 @@ def question_distribution():
 
 def answer_distribution():
     films_answercount = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
-    zero = 0
-    one = 0
-    two = 0
-    three = 0
-    four = 0
-    five = 0
-    six = 0
-    seven = 0
-    eight = 0
-    nine = 0
-    ten = 0
-    tenmore = 0
+    zero, one, two, three, four, five, six, seven, eight, nine, ten  = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    eleven, twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, twenty = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     twentymore = 0
     fiftymore = 0
     hundredmore = 0
@@ -90,13 +80,26 @@ def answer_distribution():
         if answercount == 8: eight = eight + 1
         if answercount == 9: nine = nine + 1
         if answercount == 10: ten = ten + 1
-        if answercount > 10 and answercount <= 20: tenmore = tenmore + 1
+        if answercount == 11: eleven = eleven + 1
+        if answercount == 12: twelve = twelve + 1
+        if answercount == 13: thirteen = thirteen + 1
+        if answercount == 14: fourteen = fourteen + 1
+        if answercount == 15: fifteen = fifteen + 1
+        if answercount == 16: sixteen = sixteen + 1
+        if answercount == 17: seventeen = seventeen + 1
+        if answercount == 18: eighteen = eighteen + 1
+        if answercount == 19: nineteen = nineteen + 1
+        if answercount == 20: twenty = twenty + 1
         if answercount > 20 and answercount <= 50: twentymore = twentymore + 1
         if answercount > 50 and answercount <= 100: fiftymore = fiftymore + 1
         if answercount > 100: hundredmore = hundredmore + 1
         sumcount = sumcount + 0
-    namelist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '10+', '20+', '50+', '100+']
-    countlist = [zero, one, two, three, four, five, six, seven, eight, nine, ten, tenmore, twentymore, fiftymore, hundredmore]
+    namelist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+             '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+            '20+', '50+', '100+']
+    countlist = [zero, one, two, three, four, five, six, seven, eight, nine, ten, 
+    eleven, twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, twenty,
+    twentymore, fiftymore, hundredmore]
     return namelist, countlist, sumcount
 
 def plot():
@@ -105,13 +108,13 @@ def plot():
     # Questions Last Followed
     plt.subplot(211)
     plt.bar(monthlist, numberlist)
-    lim=[nummean]*18
-    plt.plot(lim, 'r--', label = 'mean of questions last followed in weeks')
+    lim=[nummean]*17
+    plt.plot(lim, '--', color='orange', label = 'mean of questions last followed in weeks')
     plt.legend()
     plt.ylim(0, 390)
     for x, y in zip(monthlist, numberlist):
         plt.text(x, y+35, '%.0f' % y, ha ='center', va='top')
-    plt.xlabel('A Season Span (From Dec, 2018 to Mar, 2019)')
+    plt.xlabel('A Season Span (From Dec, 2018 to Apr, 2019)')
     plt.ylabel('Questions Last Followed Number')
     plt.title('Questions Last Followed Number Varing in Weeks')
     plt.tight_layout()
