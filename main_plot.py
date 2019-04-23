@@ -59,6 +59,7 @@ def question_distribution():
     
     return monthlist, numberlist, nummean
 
+
 def answer_distribution():
     films_answercount = DataBase(0, '0', '0', 0, '0', '0', 0).select_answercount()
     zero, one, two, three, four, five, six, seven, eight, nine, ten  = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -102,6 +103,46 @@ def answer_distribution():
     twentymore, fiftymore, hundredmore]
     return namelist, countlist, sumcount
 
+
+def view_distribution():
+    films_answerview = DataBase(0, '0', '0', 0, '0', '0', 0).select_answertext()
+    zero, one, two, three, four, five = 0, 0, 0, 0, 0, 0
+    fivemore, tenmore, twentymore, fiftymore = 0, 0, 0, 0
+    hundredmore, twohundredmore = 0, 0
+    fivehundredmore = 0
+    thousandmore = 0
+    fivethousandmore = 0
+    for links in films_answerview:
+        answerview = int(links[5])
+        answercount = int(links[1])
+        if answercount != 0:
+            if answerview == 0: zero = zero + 1
+            if answerview == 1: one = one + 1
+            if answerview == 2: two = two + 1
+            if answerview == 3: three = three + 1
+            if answerview == 4: four = four + 1
+            if answerview == 5: five = five + 1
+            if answerview  > 5  and answerview  <= 10: fivemore = fivemore + 1
+            if answerview  > 10 and answerview  <= 20: tenmore = tenmore + 1
+            if answerview  > 20 and answerview  <= 50: twentymore = twentymore + 1
+            if answerview  > 50 and answerview  <= 100: fiftymore = fiftymore + 1
+            if answerview  > 100 and answerview  <= 200: hundredmore = hundredmore + 1
+            if answerview  > 200 and answerview  <= 500: twohundredmore = twohundredmore + 1
+            if answerview  > 500 and answerview  <= 1000: fivehundredmore = fivehundredmore + 1
+            if answerview  > 1000 and answerview <= 5000: thousandmore = thousandmore + 1
+            if answerview  > 5000: fivethousandmore = fivethousandmore + 1
+        
+    namelist = ['0', '1', '2', '3', '4', '5', '5+',
+            '10+', '20+', '50+', '100+',
+            '200+', '500+', 
+            '1000+', '5000+']
+    viewlist = [zero, one, two, three, four, five, fivemore,
+            tenmore, twentymore, fiftymore, hundredmore, 
+            twohundredmore, fivehundredmore, 
+            thousandmore, fivethousandmore]
+    return namelist, viewlist
+
+
 def plot():
     monthlist, numberlist, nummean = question_distribution()
     namelist, countlist, sumcount = answer_distribution()
@@ -132,7 +173,23 @@ def plot():
     plt.savefig(".\pictures\plot1.png")
     plt.show()
 
+
+def view_plot():
+    namelist, viewlist = view_distribution()
+    # Views Distribution
+    plt.bar(namelist, viewlist)
+    plt.ylim(0, 1550)
+    for x, y in zip(namelist, viewlist):
+        plt.text(x, y+90, '%.0f' % y, ha='center', va='top')
+    plt.xlabel('Views')
+    plt.ylabel('Answerviews Number')
+    plt.title('Answerviews Distribution')
+    plt.savefig(".\pictures\plot2.png")
+    plt.show()
+
+
 if __name__ == "__main__":
-    question_distribution()
-    answer_distribution()
-    plot()
+    # question_distribution()
+    # answer_distribution()
+    # plot()
+    view_plot()
