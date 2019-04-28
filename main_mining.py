@@ -38,7 +38,7 @@ def ori_classify_doc():
         answercount = int(text[1])
         date = str(text[2])
         question = str(text[4])
-        view_weight = (int(text[5]) // 50) + 1 # weight to improve topic mining
+        view_weight = (int(text[5]) // 2000) + 1 # weight to improve topic mining
         answer = str(text[6])
         datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
         datenum = int(datenorm.strftime('%Y%m%d'))
@@ -49,7 +49,7 @@ def ori_classify_doc():
                 # for i in range(view_weight): # use view_weight to add weight
                     alltextlist.append(answer)
             # print(date, question, view_weight, answer)
-    fw = open('./textfiles/Ori-Apr2, 2019.txt', 'w')
+    fw = open('./textfiles/Ori All Text from Apr2, 2019.txt', 'w')
     for text in alltextlist:
         text = text + "\n"
         fw.write(text)
@@ -63,18 +63,18 @@ def classify_doc():
         answercount = int(text[1])
         date = str(text[2])
         question = str(text[4])
-        view_weight = (int(text[5]) // 2000) + 1 # weight to improve topic mining
+        view_weight = (int(text[5]) // 50) + 1 # weight to improve topic mining
         answer = str(text[6])
         datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
         datenum = int(datenorm.strftime('%Y%m%d'))
         # change datenum limitation to control weeks
-        if datenum >= 20190408 and datenum < 20190415:
+        if datenum >= 20190408:
             alltextlist.append(question) # use append or just use '+' to aggregate string
             if answercount > 0 : 
                 for i in range(view_weight): # use view_weight to add weight
                     alltextlist.append(answer)
             # print(date, question, view_weight, answer)
-    fw = open('./textfiles/Dec2, 2019.txt', 'w')
+    fw = open('./textfiles/All Text with Weight from Apr2, 2019.txt', 'w')
     for text in alltextlist:
         text = text + "\n"
         fw.write(text)
@@ -154,7 +154,7 @@ def ori_text_clean_run():
     text_cleaned1 = []
     alltextlist = ori_classify_doc()
     text_cleaned2 = [text_clean(text).split() for text in alltextlist] 
-    fw = open('./textfiles/Apr2, 2019.txt', 'w')
+    fw = open('./textfiles/Ori Cleaned Text from Apr2, 2019.txt', 'w')
     for list1 in text_cleaned2:
         for list2 in list1:
             text_cleaned0.append(list2)
@@ -176,7 +176,7 @@ def text_clean_run():
     text_cleaned1 = []
     alltextlist = classify_doc()
     text_cleaned2 = [text_clean(text).split() for text in alltextlist] 
-    fw = open('./textfiles/Apr2, 2019.txt', 'w')
+    fw = open('./textfiles/Cleaned Text with Weight from Apr2, 2019.txt', 'w')
     for list1 in text_cleaned2:
         for list2 in list1:
             text_cleaned0.append(list2)
@@ -554,7 +554,7 @@ if __name__ == "__main__":
     # kmeans_model()
     # get_wordfrequency()
     
-    epoch_time = 5000
+    epoch_time = 1
     # lda_plot(epoch_time)
     # tfidf_lda_plot(epoch_time)
     # btm_plot(epoch_time)
