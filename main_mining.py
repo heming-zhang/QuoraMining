@@ -354,7 +354,7 @@ def loop_btm_model(num_topics, weight):
     num_topics = num_topics
     weight = weight
     # texts = open('./textfiles/Ori-Apr2, 2019.txt').read().splitlines()
-    text_cleaned2, texts, text_cleaned0 = text_clean_run()
+    text_cleaned2, texts, text_cleaned0 = loop_text_clean_run(weight)
     # vectorize texts
     vec = CountVectorizer(stop_words='english')
     X = vec.fit_transform(texts).toarray()
@@ -493,19 +493,40 @@ def comparison_plot(epoch_time):
 
 def btm_plot(epoch_time):
     epoch_time = epoch_time
-    coherence_btms = []
+    fifty_coherence_btms = []
+    hundred_coherence_btms = []
+    thousand_coherence_btms = []
+    twothousand_coherence_btms = []
+    fivethousand_coherence_btms = []
     ori_coherence_btms = []
     for num_topics in range(1, epoch_time + 1):
 
-        coherence_btm = btm_model(num_topics)
-        coherence_btms.append(coherence_btm)
+        fifty_coherence_btm = loop_btm_model(num_topics, 50)
+        fifty_coherence_btms.append(fifty_coherence_btm)
+
+        hundred_coherence_btm = loop_btm_model(num_topics, 100)
+        hundred_coherence_btms.append(hundred_coherence_btm)
+
+        thousand_coherence_btm = loop_btm_model(num_topics, 1000)
+        thousand_coherence_btms.append(thousand_coherence_btm)
+
+        twothousand_coherence_btm = loop_btm_model(num_topics, 2000)
+        twothousand_coherence_btms.append(twothousand_coherence_btm)
+
+        fivethousand_coherence_btm = loop_btm_model(num_topics, 5000)
+        fivethousand_coherence_btms.append(fivethousand_coherence_btm)
 
         ori_coherence_btm = ori_btm_model(num_topics)
         ori_coherence_btms.append(ori_coherence_btm)
 
     X = range(1, epoch_time + 1)
-    plt.plot(X, coherence_btms, '^', label = "BTM-Coherence")
-    plt.plot(X, ori_coherence_btms, label = "Ori_BTM-Coherence")
+    plt.plot(X, fifty_coherence_btms, color = 'red', label = "BTM-Coherence-Weight 50")
+    plt.plot(X, hundred_coherence_btms, color = 'orange', label = "BTM-Coherence-Weight 100")
+    plt.plot(X, thousand_coherence_btms, color = 'green', label = "BTM-Coherence-Weight 1000")
+    plt.plot(X, twothousand_coherence_btms, color = 'blue', label = "BTM-Coherence-Weight 2000")
+    plt.plot(X, fivethousand_coherence_btms, color = 'yellow', label = "BTM-Coherence-Weight 5000")
+    plt.plot(X, ori_coherence_btms,'-^', color = 'blueviolet', label = "Ori_BTM-Coherence")
+    plt.xticks(np.arange(0, 21, 2))
     plt.xlabel("Number of Topics")
     plt.ylabel("Coherence")
     plt.title("BTM-Coherence-Graph")
@@ -530,9 +551,12 @@ def loop_weight_btm_plot(num_topics, epoch_time, step):
     X = range(1, epoch_time + 1, step)
     Y = coherence_loop_btms
     # line fitting
-    A2, B2, C2 = optimize.curve_fit(f_2, X, Y)[0]
-    X1 = np.arange(0, epoch_time, 0.01) 
-    Y1 = A2*X1*X1 + B2*X1 + C2
+    # A2, B2, C2 = optimize.curve_fit(f_2, X, Y)[0]
+    # X1 = np.arange(0, epoch_time, 0.01) 
+    # Y1 = A2*X1*X1 + B2*X1 + C2
+    A1, B1 = optimize.curve_fit(f_1, X, Y)[0]
+    X1 = np.arange(0, epoch_time, 0.01)
+    Y1 = A1*X1 + B1
     plt.plot(X1, Y1, color = 'orange', label = "BTM_Fitting-Coherence")
     plt.plot(X, coherence_loop_btms, '--', label = "BTM-Coherence")
     plt.plot(X, ori_coherence_btms, '-^', color = 'blueviolet' , label = "Ori_BTM-Coherence") #
@@ -547,17 +571,17 @@ def loop_weight_btm_plot(num_topics, epoch_time, step):
 
 
 if __name__ == "__main__":
-    num_topics = 6
+    num_topics = 4
     # lda_model(num_topics)
     # tfidf_model(num_topics)
-    btm_model(num_topics)
+    # btm_model(num_topics)
     # kmeans_model()
     # get_wordfrequency()
     
-    epoch_time = 1
+    epoch_time = 20
     # lda_plot(epoch_time)
     # tfidf_lda_plot(epoch_time)
-    # btm_plot(epoch_time)
+    btm_plot(epoch_time)
     # comparison_plot(epoch_time)
     # loop_weight_btm_plot(num_topics, epoch_time, step = 50)
 
