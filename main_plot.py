@@ -205,7 +205,7 @@ def trend_plot():
     criminal =    [   0,    0, 0.22, 0.10,    0, 0.16, 0.39, 0.40,    0, 0.24, 0.43, 0.19, 0.52,    0, 0.13,    0, 0.31]
     scifi =       [   0,    0,    0, 0.51, 0.34,    0,    0,    0, 0.42, 0.28, 0.35,    0, 0.10, 0.31, 0.60, 0.19, 0.60]
     thriller =    [   0,    0,    0, 0.14,    0,    0,    0,    0,    0, 0.14, 0.22,    0,    0,    0,    0,    0,    0]
-    tvshow =      [   0,    0,    0,    0, 0.36, 0.15,    0,    0, 0.27,    0,    0, 0.25,    0,    0,    0, 0.35,    0]
+    TVshow =      [   0,    0,    0,    0, 0.36, 0.15,    0,    0, 0.27,    0,    0, 0.25,    0,    0,    0, 0.35,    0]
     affectional = [   0,    0,    0,    0,    0,    0, 0.30,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0]
     war =         [   0,    0,    0,    0,    0,    0,    0, 0.31,    0,    0,    0,    0, 0.13,    0,    0,    0,    0]
 
@@ -225,7 +225,7 @@ def trend_plot():
 
     plt.stackplot(weeklist, comedy, documentary, feature, 
                 plot, animation, actor, criminal, scifi,
-                thriller, tvshow, affectional, war,
+                thriller, TVshow, affectional, war,
                 colors=['mistyrose','lightcoral','yellow','red',
                 'gold', 'lime', 'orange', 'royalblue',
                 'aquamarine', 'deepskyblue', 'mediumorchid', 'blueviolet'])
@@ -244,7 +244,7 @@ def trend_heat_plot():
     
     topics = ['Comedy', 'Documentary', 'Feature', 
             'Plot', 'Animation', 'Actor', 'Criminal', 'SciFi',
-            'Thriller', 'Tv Show', 'Affectional', 'War']
+            'Thriller', 'TV Show', 'Affectional', 'War']
 
     weeklist = ['Dec2', 'Dec3', 'Dec4',
                 'Jan1', 'Jan2', 'Jan3', 'Jan4', 
@@ -276,8 +276,7 @@ def trend_heat_plot():
     ax.set_yticklabels(topics)
 
     # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
-            rotation_mode="anchor")
+    
 
     # Loop over data dimensions and create text annotations.
     for i in range(len(topics)):
@@ -290,10 +289,9 @@ def trend_heat_plot():
     # plt.show()
 
     im, cbar = heatmap(proportions, topics, weeklist, ax=ax,
-                   cmap="viridis", cbarlabel="Topics Proportion [in weeks]") # cmap = 'plasma' 'jet'
+                   cmap="Wistia", cbarlabel="Topics Proportion") # cmap = 'plasma' 'jet'
     # texts = annotate_heatmap(im, valfmt="{x:.1f} t")
 
-    # fig.tight_layout()
     plt.show()
 
 
@@ -301,7 +299,7 @@ def seaborn_heat_plot():
 
     topics = ['Comedy', 'Documentary', 'Feature', 
             'Plot', 'Animation', 'Actor', 'Criminal', 'SciFi',
-            'Thriller', 'Tv Show', 'Affectional', 'War']
+            'Thriller', 'TV Show', 'Affectional', 'War']
 
     weeklist = ['Dec2', 'Dec3', 'Dec4',
                 'Jan1', 'Jan2', 'Jan3', 'Jan4', 
