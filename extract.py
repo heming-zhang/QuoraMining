@@ -96,7 +96,7 @@ class ExtractInfo():
                     if views == None: views = block.find('div', class_='ReadingContentFooter AnswerFooter ContentFooter')
                     if views == None: views = block.find('div', class_='ReadingContentFooter ContentFooter AnswerFooter')
                     if views == None: continue
-                    view0 = views.contents[0].strip()
+                    view0 = views.find('span').get_text() # view0 = views.contents[0].strip()
                     view0 = view0.strip(' views')
                     print(view0)
                     kilo = view0.find('k')
