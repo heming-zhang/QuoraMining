@@ -86,7 +86,7 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """select * from films_answertext_0414"""
+      sql = """select * from ml_answertext_0531"""
       cursor.execute(sql)
       films_answertext = cursor.fetchall()
       db.close()
@@ -109,7 +109,7 @@ class DataBase():
                            database = "quora" )
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
-      sql = """insert into films_and_televisions values(%s, %s, %s, %s, %s, %s, %s)"""
+      sql = """insert into machine_learning values(%s, %s, %s, %s, %s, %s, %s)"""
       cursor.executemany(sql, movies)
       # disconnect from server
       db.close()
@@ -142,9 +142,9 @@ class DataBase():
       # prepare a cursor object using cursor() method
       cursor = db.cursor()
       # Drop table if it already exist using execute() method.
-      cursor.execute("drop table if exists films_and_televisions") # films_and_televisions
+      cursor.execute("drop table if exists machine_learning") # films_and_televisions
       # Create table as per requirement
-      sql = """create table films_and_televisions(
+      sql = """create table machine_learning(
          rank int not null,
          answercount int,
          timestamp varchar(50),

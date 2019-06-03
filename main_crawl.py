@@ -27,15 +27,18 @@ def crawl_links():
     homeurl = "https://www.quora.com/?prevent_redirect=1" # to use English as first language
     email = "3181276187@qq.com"
     password = "15hszhm961203"
+    topictitle = "All Questions on Machine Learning - Quora" 
     # topictitle = "All Questions on Movies - Quora" 
-    topictitle = "All Questions on Film and Television - Quora"
+    # topictitle = "All Questions on Film and Television - Quora"
     # topictitle = "All Questions on TV Sitcoms - Quora"
     # topictitle = "All Questions on Television Series - Quora"
+
+    topicurl = "https://www.quora.com/topic/Machine-Learning/all_questions"
     # topicurl = "https://www.quora.com/topic/Movies/all_questions"
-    topicurl = "https://www.quora.com/topic/Film-and-Television/all_questions"
+    # topicurl = "https://www.quora.com/topic/Film-and-Television/all_questions"
     # topicurl = "https://www.quora.com/topic/TV-Sitcoms/all_questions"
     # topicurl = "https://www.quora.com/topic/Television-Series/all_questions"
-    pulltime = 20000
+    pulltime = 50000
     quora_login = Login(homeurl, email, password)
     driver = quora_login.login()
     choose_movies = Action(driver, topictitle, topicurl, pulltime)

@@ -94,7 +94,7 @@ def loop_classify_doc(weight):
         datenorm = datetime.datetime.strptime(date, '%Y/%m/%d')
         datenum = int(datenorm.strftime('%Y%m%d'))
         # change datenum limitation to control weeks
-        if datenum >= 20190211 and datenum < 20190218:
+        if datenum >= 20190513 and datenum < 20190602:
             alltextlist.append(question) # use append or just use '+' to aggregate string
             if answercount > 0 : 
                 for i in range(view_weight): # use view_weight to add weight
@@ -112,10 +112,6 @@ def loop_classify_doc(weight):
 
 def text_clean_set():
     stop = stopwords.words('english')
-    stop.extend(['movies', 'movie' 
-        'shows', 'show',
-        'films', 'film',
-        'tv', 'television'])
     exclude = set(string.punctuation)
     lemma = WordNetLemmatizer()
     return stop, exclude, lemma
@@ -574,14 +570,14 @@ if __name__ == "__main__":
     num_topics = 4
     # lda_model(num_topics)
     # tfidf_model(num_topics)
-    # btm_model(num_topics)
+    btm_model(num_topics)
     # kmeans_model()
     # get_wordfrequency()
     
-    epoch_time = 20
+    # epoch_time = 20
     # lda_plot(epoch_time)
     # tfidf_lda_plot(epoch_time)
-    btm_plot(epoch_time)
+    # btm_plot(epoch_time)
     # comparison_plot(epoch_time)
     # loop_weight_btm_plot(num_topics, epoch_time, step = 50)
 
