@@ -71,7 +71,7 @@ def classify_doc():
         if datenum >= 20190408:
             alltextlist.append(question) # use append or just use '+' to aggregate string
             if answercount > 0 : 
-                for i in range(view_weight): # use view_weight to add weight
+                # for i in range(view_weight): # use view_weight to add weight
                     alltextlist.append(answer)
             # print(date, question, view_weight, answer)
     fw = open('./textfiles/All Text with Weight from Apr2, 2019.txt', 'w')
@@ -336,9 +336,9 @@ def btm_model(num_topics):
     result = {}
     print("\n\n Texts & Topics ..")
     for i in range(len(texts)):
-        # print(topics[i].argmax())
+        print(topics[i].argmax())
         num_list.append(topics[i].argmax())
-        # print("{} (topic: {})".format(texts[i], topics[i].argmax()))
+        print("{} (topic: {})".format(texts[i], topics[i].argmax()))
     num_array = np.array(num_list)
     for i in set(num_list):
         result[i] = num_list.count(i)
