@@ -1,4 +1,4 @@
-# QuoraCrawling in CCNU
+# QuoraMining
 
 * basic tools to implement:
   * window10;
