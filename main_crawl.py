@@ -25,7 +25,7 @@ def create_db():
 
 def crawl_links():
     homeurl = "https://www.quora.com/?prevent_redirect=1" # to use English as first language
-    email = "3181276187@qq.com" # im.hemingzhang@gmail.com
+    email = "3181276187@qq.com"
     password = "15hszhm961203"
     topictitle = "All Questions on Machine Learning - Quora" 
     # topictitle = "All Questions on Movies - Quora" 
