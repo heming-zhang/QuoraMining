@@ -1,6 +1,8 @@
 # QuoraMining: topics evolution on Quora
 
-We propose a new model – Weight Biterm Topic Model (WBTM) by weighting the question answering text with user behavior data. The results show that our model has higher coherence values. The trend chart of theme evolution is drawn and analyzed by means of thermal map to make personal suggestions on recommendation and advertising of Quora Film and Television and other topics. [See the full paper]().
+We propose a new model – Weight Biterm Topic Model (WBTM) by weighting the question answering text with user behavior data. The results show that our model has higher coherence values. The trend chart of theme evolution is drawn and analyzed by means of thermal map to make personal suggestions on recommendation and advertising of Quora Film and Television and other topics. 
+
+For more details about QuoraMing, see [the full paper](https://github.com/heming-zhang/QuoraMining/blob/master/paper/QuoraMining.pdf).
 
 ### Environment
 
