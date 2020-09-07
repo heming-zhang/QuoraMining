@@ -4,19 +4,21 @@ We propose a new model – Weight Biterm Topic Model (WBTM) by weighting the que
 
 For more details about QuoraMining, see [the full paper](https://github.com/heming-zhang/QuoraMining/blob/master/paper/QuoraMining.pdf).
 
-### Environment
+### Dependencies
 
-* python 3.7.2; (packages: bs4, urllib.request, pymysql)
+* python 3.7.2; 
+* bs4, urllib.request, pymysql
 * Navicat for MySQL 11.1.13
 
 Please ensure the local database is connected before running the code. And you may also want to add an account to crawl data from Quora.
 
-### Running QuoraMining
+## 1. Crawling Q&A Data from Quora
 Crawl text from Quora
 ```
 python3 main_crawl.py
 ```
 
+## 2. Topics Mining with WBTM
 Initiate topic mining with WBTM
 ```
 python3 main_mining.py
